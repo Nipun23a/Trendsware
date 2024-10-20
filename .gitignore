@@ -70,4 +70,4 @@ node_modules/
 
 
 client/src/firebase.js
-server/api/utils/serviceAccount.json
+server/api/config/serviceAccount.json
