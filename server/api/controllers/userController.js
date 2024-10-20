@@ -10,13 +10,28 @@ exports.getUsers = async (req,res) => {
 };
 
 
-exports.createUsers = async (req,res) => {
+exports.createUsers = async (req, res) => {
     try {
-        const newUser = new User(req.body);
+        const {first_name, last_name, email, password, user_role} = req.body;
+        if (!first_name || !last_name || !email || !password) {
+            return res.status(400).json({
+                message: 'All required fields (first_name, last_name, email, password) must be provided.',
+            });
+        }
+        const newUser = new User({
+            first_name,
+            last_name,
+            email,
+            password,
+            user_role,
+        });
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        return res.status(201).json(savedUser);
     } catch (error) {
-        res.status(400).json({message:'Error creating user',error: error.message});
+        return res.status(400).json({
+            message: 'Error creating user',
+            error: error.message,
+        });
     }
 };
 
@@ -25,7 +40,7 @@ exports.updateUsers = async (req,res) => {
         const {id} = req.params;
         const updates = req.body;
 
-        const user = await Product.findByIdAndUpdate(id,updates,{new:true,runValidators: true });
+        const user = await User.findByIdAndUpdate(id,updates,{new:true,runValidators: true });
 
         if(!user){
             return res.status(404).json({message: 'User Not Found'});
@@ -40,7 +55,7 @@ exports.updateUsers = async (req,res) => {
 exports.deleteUsers = async(req,res) => {
     try {
         const {id}  = req.params;
-        const users = await User.findByIdAndDelete(id);
+        const user = await User.findByIdAndDelete(id);
 
         if(!user) {
             return res.status(404).json({message:'User Not Found'});
