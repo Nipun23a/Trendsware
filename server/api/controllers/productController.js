@@ -51,3 +51,18 @@ exports.deleteProducts = async(req,res) => {
         res.status(400).json({message: 'Error deleting product',error: error.message});
     }
 };
+
+exports.getProductById = async (req,res) => {
+    try {
+        const {id} = req.params;
+        const product = await Product.findById(id);
+
+        if (!product){
+            return res.status(404).json({message:'Product Not Found'});
+        }
+
+        res.json(product);
+    } catch (error) {
+        res.status(400).json({message:'Error fetching product', error:error.message});
+    }
+};
