@@ -1,3 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.title{
+    font-family: "Lexend Giga", sans-serif;
+    color: #002A4F;
+}
+
+.sub-title-font{
+    font-family: 'Montserrat', sans-serif;
+    color:#002A4F;
+}
+
+.sing-up-button{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.placeholder-custom::placeholder {
+    font-family: 'Montserrat', sans-serif; /* Example font */
+    font-size: 16px;  /* Adjust font size */
+    color: #888888;   /* Placeholder text color */
+}

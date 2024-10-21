@@ -1,10 +1,19 @@
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css'
+
+
+import Header from "./components/common/common-user/Header";
 
 function App() {
   return (
-    <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+      <Router>
+        <div className="App">
+          <Header />
+          <Routes>
+          </Routes>
+        </div>
+      </Router>
   );
 }
 
