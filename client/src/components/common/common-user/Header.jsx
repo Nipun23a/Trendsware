@@ -3,16 +3,16 @@ import { Search, ShoppingCart } from 'lucide-react';
 
 const Header = () => {
   return (
-      <header className="bg-transparent text-white p-4 mt-5">
-        <div className="container mx-auto flex items-center justify-between">
+      <header className="bg-[#BAD7F2] text-white w-full">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4">
           <div className="flex items-center space-x-8">
             <h1 className="text-3xl font-bold title">Trendsware</h1>
             <nav className="absolute left-1/2 transform -translate-x-1/2">
               <ul className="flex space-x-8">
-                <li><a href="#" className="sub-title-font text-base font-medium mr-4 hover:text-blue-950">Home</a></li>
-                <li><a href="#" className="sub-title-font text-base font-medium mr-4 hover:text-blue-950">Product</a></li>
-                <li><a href="#" className="sub-title-font  text-base font-medium mr-4 hover:text-blue-950">About us</a></li>
-                <li><a href="#" className="sub-title-font text-base  font-medium mr-4 hover:text-blue-950">Contact us</a></li>
+                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">Home</a></li>
+                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">Product</a></li>
+                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">About us</a></li>
+                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">Contact us</a></li>
               </ul>
             </nav>
           </div>
