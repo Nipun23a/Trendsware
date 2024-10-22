@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from "../../components/common/common-user/Header";
 import UpperContainer from "../../components/common/common-user/UpperContainer";
+import NewItemContainer from "../../components/common/common-user/New-Item-Container";
 
 const Home = () => {
     return (
@@ -13,7 +14,7 @@ const Home = () => {
 
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="new-items-container my-8">
-                    {/* New Items Content */}
+                    <NewItemContainer/>
                 </div>
 
                 <div className="information-container my-8">
