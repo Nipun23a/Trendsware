@@ -7,33 +7,53 @@ import SiteInformation from "../../components/common/common-user/Site-Informatio
 const Home = () => {
     return (
         <div className="w-full">
-            <div className="home-upper-container bg-[#BAD7F2]">
+            {/* Upper Container Section */}
+            <section className="bg-[#BAD7F2]">
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                     <UpperContainer />
                 </div>
-            </div>
+            </section>
 
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="new-items-container my-8">
-                    <NewItemContainer/>
+            {/* New Items Section */}
+            <section className="bg-white py-16">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <NewItemContainer />
                 </div>
+            </section>
 
-                <div className="information-container my-8">
-                    <SiteInformation/>
+            {/* Site Information Section */}
+            <section className="bg-[#BAD7F2] py-16">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <SiteInformation />
                 </div>
+            </section>
 
-                <div className="best-seller-container my-8">
-                    {/* Best Seller Content */}
+            {/* Best Seller Section */}
+            <section className="bg-white py-16">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="best-seller-container">
+                        {/* Best Seller Content */}
+                    </div>
                 </div>
+            </section>
 
-                <div className="deal-of-day-container my-8">
-                    {/* Deal of the Day Content */}
+            {/* Deal of the Day Section */}
+            <section className="bg-white py-16">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="deal-of-day-container">
+                        {/* Deal of the Day Content */}
+                    </div>
                 </div>
+            </section>
 
-                <div className="footer-container my-8">
-                    {/* Footer Content */}
+            {/* Footer Section */}
+            <footer className="bg-blue-950 py-16">
+                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="footer-container text-white">
+                        {/* Footer Content */}
+                    </div>
                 </div>
-            </div>
+            </footer>
         </div>
     );
 };
