@@ -2,6 +2,7 @@ import React from 'react';
 import Header from "../../components/common/common-user/Header";
 import UpperContainer from "../../components/common/common-user/UpperContainer";
 import NewItemContainer from "../../components/common/common-user/New-Item-Container";
+import SiteInformation from "../../components/common/common-user/Site-Information";
 
 const Home = () => {
     return (
@@ -18,7 +19,7 @@ const Home = () => {
                 </div>
 
                 <div className="information-container my-8">
-                    {/* Information Content */}
+                    <SiteInformation/>
                 </div>
 
                 <div className="best-seller-container my-8">
