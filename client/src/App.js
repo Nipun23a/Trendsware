@@ -1,20 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css'
-
-
 import Header from "./components/common/common-user/Header";
+import Home from "./pages/common-pages/Home";
+import './App.css';
 
 function App() {
-  return (
-      <Router>
-        <div className="App">
-          <Header />
-          <Routes>
-          </Routes>
+    return (
+        <div className="min-h-screen">
+            <Header />
+            <main className="mx-auto">
+                <Home />
+            </main>
         </div>
-      </Router>
-  );
+    );
 }
 
 export default App;
