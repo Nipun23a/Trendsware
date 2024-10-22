@@ -10,7 +10,7 @@ const UpperContainer = () => {
                         Where fashion<br/> meets{' '}
                         <span className="text-[#F2994A]">Elegance</span>
                     </h5>
-                    <p className="text-blue-900 text-lg max-w-xl sub-title-font uppercase">
+                    <p className="text-blue-900 text-lg max-w-xl sub-title-font uppercase leading-[50px]">
                         Indulge in our latest collection of timeless designs, crafted for those who appreciate sophistication.
                         Elevate your style with premium pieces for every occasion.
                     </p>
