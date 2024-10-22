@@ -23,7 +23,7 @@ const Header = () => {
                   placeholder="Search..."
                   className="bg-transparent text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-custom"
               />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#002A4F]" size={20} />
             </div>
             <ShoppingCart className="text-[#002A4F] cursor-pointer" size={24} />
             <button className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full sing-up-button font-medium">
