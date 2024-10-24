@@ -4,7 +4,7 @@ import InformationImage from '../../../assets/images/information-container-image
 const StoreImageSection = () => {
     return (
         <div className="site-information-image-container lg:w-1/2 relative">
-            <div className="relative rounded-3xl overflow-hidden group">
+            <div className="w-[665px] h-[850px] relative rounded-3xl overflow-hidden group">
                 <img
                     src={InformationImage}
                     alt="Store showcase"
