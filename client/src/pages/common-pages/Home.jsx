@@ -5,6 +5,7 @@ import NewItemContainer from "../../components/common/common-user/New-Item-Conta
 import SiteInformation from "../../components/common/common-user/Site-Information";
 import TrendingItemContainer from "../../components/common/common-user/Trending-Item-Container";
 import DealOfDaysContainer from "../../components/common/common-user/Deal-of-Day-Container";
+import FooterContainer from "../../components/common/common-user/Footer-Container";
 
 const Home = () => {
     return (
@@ -52,7 +53,7 @@ const Home = () => {
             <footer className="bg-blue-950 py-16">
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="footer-container text-white">
-                        {/* Footer Content */}
+                        <FooterContainer/>
                     </div>
                 </div>
             </footer>
