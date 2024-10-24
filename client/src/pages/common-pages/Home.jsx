@@ -3,6 +3,7 @@ import Header from "../../components/common/common-user/Header";
 import UpperContainer from "../../components/common/common-user/UpperContainer";
 import NewItemContainer from "../../components/common/common-user/New-Item-Container";
 import SiteInformation from "../../components/common/common-user/Site-Information";
+import TrendingItemContainer from "../../components/common/common-user/Trending-Item-Container";
 
 const Home = () => {
     return (
@@ -32,7 +33,7 @@ const Home = () => {
             <section className="bg-white py-16">
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="best-seller-container">
-                        {/* Best Seller Content */}
+                        <TrendingItemContainer/>
                     </div>
                 </div>
             </section>
