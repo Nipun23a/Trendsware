@@ -17,7 +17,7 @@ export default function FooterSmall(props) {
                 <div className="text-sm text-blueGray-500 font-semibold py-1 text-center font-raleway">
                   Copyright © {new Date().getFullYear()}{" "}
                   <a
-                      href="https://www.creative-tim.com?ref=nr-footer-small"
+                      href="#"
                       className="text-white hover:text-blueGray-300 text-sm font-semibold py-1"
                   >
                     Webdreamscape
