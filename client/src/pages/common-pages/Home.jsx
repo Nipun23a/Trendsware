@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from "../../components/common/common-user/Header";
 import UpperContainer from "../../components/common/common-user/UpperContainer";
 import NewItemContainer from "../../components/common/common-user/New-Item-Container";
 import SiteInformation from "../../components/common/common-user/Site-Information";
