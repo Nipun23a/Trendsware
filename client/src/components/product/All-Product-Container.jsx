@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown, Check } from 'lucide-react';
-import ItemContainer from '../Item-Container';
+import ItemContainer from '../common/common-user/Item-Container';
 
 const AllProductContainer = () => {
     const products = Array(16).fill({

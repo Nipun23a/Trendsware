@@ -1,6 +1,6 @@
 import React from 'react';
-import ProductUpperContainer from "../../components/common/common-user/product-page-component/Product-Upper-Container";
-import AllProductContainer from "../../components/common/common-user/product-page-component/All-Product-Container";
+import ProductUpperContainer from "../../components/product/Product-Upper-Container";
+import AllProductContainer from "../../components/product/All-Product-Container";
 
 const Product = () => {
     return(

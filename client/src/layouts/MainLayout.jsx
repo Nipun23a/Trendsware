@@ -6,6 +6,7 @@ import About from "../pages/common-pages/About";
 import Contact from "../pages/common-pages/Contact";
 import Product from "../pages/common-pages/Product";
 import FooterContainer from "../components/common/common-user/Footer-Container";
+import SingleProductContainer from "../components/product/single-product-component/Single-Product-Container";
 
 
 
@@ -18,6 +19,7 @@ const MainLayout = () => {
                     <Route path = "/" element={<Home />} />
                     <Route path = "/about" element={<About />} />
                     <Route path = "/product" element = {<Product/>}/>
+                    <Route path = "/single-product" element={<SingleProductContainer/>}/>
                     <Route path = "/contact" element = {<Contact/>}/>
                 </Routes>
             </main>

@@ -15,10 +15,10 @@ const ItemContainer = () => {
 
                 {/* Hover overlay with buttons */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                    <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-blue-950 hover:text-white transition-colors">
+                    <a className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-blue-950 hover:text-white transition-colors" href="/single-product">
                         <Eye size={20} />
-                    </button>
-                    <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-blue-950 hover:text-white transition-colors">
+                    </a>
+                    <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-orange-400 hover:text-white transition-colors">
                         <ShoppingCartIcon size={20} />
                     </button>
                 </div>
