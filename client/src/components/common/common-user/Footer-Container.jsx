@@ -11,7 +11,7 @@ const FooterContainer = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
                                 {/* Store Info Column */}
                                 <div className="space-y-8">
-                                    <h3 className="text-5xl font-bold text-white font-poppins">Trendsware</h3>
+                                    <h3 className="text-5xl font-bold text-white font-poppins sm:text-3xl">Trendsware</h3>
                                     <p className="text-[#878787] font-poppins leading-[40px]">
                                         We are dedicated to providing the best shopping experience with
                                         carefully curated products and exceptional customer service.
