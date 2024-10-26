@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import InformationBox from "./InformationBox";
-import DealDayImage from '../../../assets/images/deal-of-the-day.jpg';
+import DealDayImage from '../../../../assets/images/deal-of-the-day.jpg';
 
 const DealOfDaysContainer = () => {
     const [timeLeft, setTimeLeft] = useState({
@@ -92,10 +92,10 @@ const DealOfDaysContainer = () => {
                 </div>
 
                 {/* Shop Now Button */}
-                <button className="w-full sm:w-auto px-8 py-3 sm:px-12 sm:py-4 border-2 border-blue-950 text-blue-950 font-bold font-poppins
-                    hover:bg-blue-950 hover:text-white transition-all duration-300">
+                <a className="w-full sm:w-auto px-8 py-3 sm:px-12 sm:py-4 border-2 border-blue-950 text-blue-950 font-bold font-poppins
+                    hover:bg-blue-950 hover:text-white transition-all duration-300" href="/product">
                     Shop Now
-                </button>
+                </a>
             </div>
 
             {/* Image Section */}

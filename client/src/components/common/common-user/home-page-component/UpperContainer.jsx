@@ -1,5 +1,5 @@
 import React from 'react';
-import UpperContainerImage from '../../../assets/images/upper-container-image.jpg';
+import UpperContainerImage from '../../../../assets/images/upper-container-image.jpg';
 
 const UpperContainer = () => {
     return (
@@ -15,9 +15,9 @@ const UpperContainer = () => {
                         Elevate your style with premium pieces for every occasion.
                     </p>
                     <div className="space-x-4 pt-4">
-                        <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-medium sing-up-button">
+                        <a className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-medium sing-up-button" href="/product">
                             Shop Now
-                        </button>
+                        </a>
                         <button className="bg-transparent border-2 border-blue-950 text-blue-950 px-8 py-3 rounded-full font-medium hover:bg-blue-950 hover:text-white transition-colors sing-up-button">
                             Learn More
                         </button>

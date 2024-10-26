@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemContainer from './Item-Container'; // Assuming this is the path to your ItemContainer
+import ItemContainer from '../Item-Container'; // Assuming this is the path to your ItemContainer
 
 const NewItemContainer = () => {
     return (

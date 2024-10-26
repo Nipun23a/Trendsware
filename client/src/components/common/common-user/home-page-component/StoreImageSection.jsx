@@ -1,5 +1,5 @@
 import React from 'react';
-import InformationImage from '../../../assets/images/information-container-image.jpg';
+import InformationImage from '../../../../assets/images/information-container-image.jpg';
 
 const StoreImageSection = () => {
     return (
@@ -13,10 +13,10 @@ const StoreImageSection = () => {
 
                 {/* Overlay with bottom-center button */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                    <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-                        <button className="bg-white text-blue-950 hover:bg-blue-950 hover:text-white px-12 py-5  font-bold transition-all duration-300  transform hover:scale-105 font-poppins text-3xl">
+                    <div className="mb-10 absolute bottom-8 left-1/2 transform -translate-x-1/2">
+                        <a className="bg-white text-blue-950 hover:bg-blue-950 hover:text-white px-12 py-5  font-bold transition-all duration-300  transform hover:scale-105 font-poppins text-3xl" href="/product">
                             Explore Now
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

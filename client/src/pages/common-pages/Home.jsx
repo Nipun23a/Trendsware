@@ -1,10 +1,9 @@
 import React from 'react';
-import UpperContainer from "../../components/common/common-user/UpperContainer";
-import NewItemContainer from "../../components/common/common-user/New-Item-Container";
-import SiteInformation from "../../components/common/common-user/Site-Information";
-import TrendingItemContainer from "../../components/common/common-user/Trending-Item-Container";
-import DealOfDaysContainer from "../../components/common/common-user/Deal-of-Day-Container";
-import FooterContainer from "../../components/common/common-user/Footer-Container";
+import UpperContainer from "../../components/common/common-user/home-page-component/UpperContainer";
+import NewItemContainer from "../../components/common/common-user/home-page-component/New-Item-Container";
+import SiteInformation from "../../components/common/common-user/home-page-component/Site-Information";
+import TrendingItemContainer from "../../components/common/common-user/home-page-component/Trending-Item-Container";
+import DealOfDaysContainer from "../../components/common/common-user/home-page-component/Deal-of-Day-Container";
 
 const Home = () => {
     return (

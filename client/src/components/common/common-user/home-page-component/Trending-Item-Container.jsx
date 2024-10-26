@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ItemContainer from './Item-Container';
+import ItemContainer from '../Item-Container';
 
 const TrendingItemContainer = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
