@@ -18,7 +18,7 @@ const Header = () => {
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4">
             {/* Logo and Hamburger Menu */}
             <div className="flex items-center space-x-4">
-              <h1 className="text-3xl font-bold title">Trendsware</h1>
+              <a className="text-3xl font-bold title" href="/">Trendsware</a>
               <button
                   className="lg:hidden text-[#002A4F]"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -30,10 +30,10 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:block">
               <ul className="flex space-x-8">
-                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">Home</a></li>
-                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">Product</a></li>
-                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">About us</a></li>
-                <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950">Contact us</a></li>
+                <li><a href="/" className="sub-title-font text-base font-medium hover:text-blue-950">Home</a></li>
+                <li><a href="/product" className="sub-title-font text-base font-medium hover:text-blue-950">Product</a></li>
+                <li><a href="/about" className="sub-title-font text-base font-medium hover:text-blue-950">About us</a></li>
+                <li><a href="/contact" className="sub-title-font text-base font-medium hover:text-blue-950">Contact us</a></li>
               </ul>
             </nav>
 
@@ -72,10 +72,10 @@ const Header = () => {
               {/* Mobile Navigation Links */}
               <nav>
                 <ul className="space-y-4">
-                  <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950 block">Home</a></li>
-                  <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950 block">Product</a></li>
-                  <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950 block">About us</a></li>
-                  <li><a href="#" className="sub-title-font text-base font-medium hover:text-blue-950 block">Contact us</a></li>
+                  <li><a href="/" className="sub-title-font text-base font-medium hover:text-blue-950 block">Home</a></li>
+                  <li><a href="/product" className="sub-title-font text-base font-medium hover:text-blue-950 block">Product</a></li>
+                  <li><a href="/about" className="sub-title-font text-base font-medium hover:text-blue-950 block">About us</a></li>
+                  <li><a href="/contact" className="sub-title-font text-base font-medium hover:text-blue-950 block">Contact us</a></li>
                 </ul>
               </nav>
 
