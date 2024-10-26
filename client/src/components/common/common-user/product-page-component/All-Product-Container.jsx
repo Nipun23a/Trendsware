@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, Check } from 'lucide-react';
 import ItemContainer from '../Item-Container';
 
 const AllProductContainer = () => {
@@ -15,6 +15,8 @@ const AllProductContainer = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [sortBy, setSortBy] = useState('popularity');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isSortOpen, setIsSortOpen] = useState(false);
 
     const itemsPerPage = 8;
     const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -23,56 +25,138 @@ const AllProductContainer = () => {
 
     const displayedProducts = products.slice(startIndex, endIndex);
 
+    const categoryOptions = [
+        { value: 'all', label: 'All Categories' },
+        { value: 'mens', label: "Men's Wear" },
+        { value: 'womens', label: "Women's Wear" },
+        { value: 'kids', label: "Kid's Wear" }
+    ];
+
+    const sortOptions = [
+        { value: 'popularity', label: 'Sort by Popularity' },
+        { value: 'date', label: 'Sort by Date Added' },
+        { value: 'price-low', label: 'Price: Low to High' },
+        { value: 'price-high', label: 'Price: High to Low' }
+    ];
+
     return (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
             {/* Filters Section - Mobile */}
             <div className="flex sm:hidden justify-between gap-2 mb-6">
                 <select
-                    className="w-[48%] px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-950 font-montserrat font-light text-sm"
+                    className="w-[48%] px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-950 font-montserrat font-light text-sm bg-transparent text-blue-950"
                     value={selectedFilter}
                     onChange={(e) => setSelectedFilter(e.target.value)}
                 >
-                    <option value="all">All Categories</option>
-                    <option value="mens">Men's Wear</option>
-                    <option value="womens">Women's Wear</option>
-                    <option value="kids">Kid's Wear</option>
+                    {categoryOptions.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
                 </select>
 
                 <select
-                    className="w-[48%] px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-950 font-montserrat font-light text-sm"
+                    className="w-[48%] px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-950 font-montserrat font-light text-sm bg-transparent text-blue-950"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                 >
-                    <option value="popularity">Sort by Popularity</option>
-                    <option value="date">Sort by Date Added</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
+                    {sortOptions.map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
                 </select>
             </div>
 
             {/* Filters Section - Desktop */}
             <div className="hidden sm:flex justify-end gap-4 mb-10">
-                <select
-                    className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-950 font-montserrat font-light"
-                    value={selectedFilter}
-                    onChange={(e) => setSelectedFilter(e.target.value)}
-                >
-                    <option value="all">All Categories</option>
-                    <option value="mens">Men's Wear</option>
-                    <option value="womens">Women's Wear</option>
-                    <option value="kids">Kid's Wear</option>
-                </select>
+                {/* Category Filter */}
+                <div className="relative">
+                    <button
+                        onClick={() => {
+                            setIsFilterOpen(!isFilterOpen);
+                            setIsSortOpen(false);
+                        }}
+                        className="min-w-[200px] px-4 py-2.5 rounded-lg border border-gray-300
+                                 bg-transparent text-blue-950 font-montserrat font-light
+                                 flex items-center justify-between gap-2 hover:border-blue-950
+                                 transition-all duration-300 group"
+                    >
+                        <span className="truncate">
+                            {categoryOptions.find(opt => opt.value === selectedFilter)?.label}
+                        </span>
+                        <ChevronDown
+                            size={18}
+                            className={`transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''} 
+                                      group-hover:text-blue-950`}
+                        />
+                    </button>
 
-                <select
-                    className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-950 font-montserrat font-light"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                >
-                    <option value="popularity">Sort by Popularity</option>
-                    <option value="date">Sort by Date Added</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                </select>
+                    {isFilterOpen && (
+                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border border-gray-200
+                                      shadow-lg py-2">
+                            {categoryOptions.map((option) => (
+                                <button
+                                    key={option.value}
+                                    onClick={() => {
+                                        setSelectedFilter(option.value);
+                                        setIsFilterOpen(false);
+                                    }}
+                                    className="w-full px-4 py-2.5 text-left flex items-center justify-between
+                                             hover:bg-blue-50 transition-colors font-montserrat font-light
+                                             text-blue-950"
+                                >
+                                    <span>{option.label}</span>
+                                    {selectedFilter === option.value && (
+                                        <Check size={16} className="text-blue-950" />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Sort Filter */}
+                <div className="relative">
+                    <button
+                        onClick={() => {
+                            setIsSortOpen(!isSortOpen);
+                            setIsFilterOpen(false);
+                        }}
+                        className="min-w-[200px] px-4 py-2.5 rounded-lg border border-gray-300
+                                 bg-transparent text-blue-950 font-montserrat font-light
+                                 flex items-center justify-between gap-2 hover:border-blue-950
+                                 transition-all duration-300 group"
+                    >
+                        <span className="truncate">
+                            {sortOptions.find(opt => opt.value === sortBy)?.label}
+                        </span>
+                        <ChevronDown
+                            size={18}
+                            className={`transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''} 
+                                      group-hover:text-blue-950`}
+                        />
+                    </button>
+
+                    {isSortOpen && (
+                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border border-gray-200
+                                      shadow-lg py-2">
+                            {sortOptions.map((option) => (
+                                <button
+                                    key={option.value}
+                                    onClick={() => {
+                                        setSortBy(option.value);
+                                        setIsSortOpen(false);
+                                    }}
+                                    className="w-full px-4 py-2.5 text-left flex items-center justify-between
+                                             hover:bg-blue-50 transition-colors font-montserrat font-light
+                                             text-blue-950"
+                                >
+                                    <span>{option.label}</span>
+                                    {sortBy === option.value && (
+                                        <Check size={16} className="text-blue-950" />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Products Grid */}
