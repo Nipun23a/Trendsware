@@ -5,6 +5,7 @@ import Home from "../pages/common-pages/Home";
 import About from "../pages/common-pages/About";
 import Contact from "../pages/common-pages/Contact";
 import Product from "../pages/common-pages/Product";
+import FooterContainer from "../components/common/common-user/Footer-Container";
 
 
 
@@ -20,6 +21,7 @@ const MainLayout = () => {
                     <Route path = "/contact" element = {<Contact/>}/>
                 </Routes>
             </main>
+            <FooterContainer/>
         </div>
     );
 }

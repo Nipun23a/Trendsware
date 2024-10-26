@@ -47,15 +47,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            {/* Footer Section */}
-            <footer className="bg-blue-950 py-16">
-                <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="footer-container text-white">
-                        <FooterContainer/>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 };
