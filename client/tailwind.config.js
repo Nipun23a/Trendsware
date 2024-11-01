@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      lineHeight:{
+        'custom-60':'60px',
+      },
       fontFamily: {
         'lexend': ['"Lexend Giga"', 'sans-serif'],
         'montserrat': ['"Montserrat"', 'sans-serif'],
