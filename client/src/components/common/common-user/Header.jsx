@@ -32,8 +32,8 @@ const Header = () => {
               <ul className="flex space-x-8">
                 <li><a href="/" className="sub-title-font text-base font-medium hover:text-blue-950">Home</a></li>
                 <li><a href="/product" className="sub-title-font text-base font-medium hover:text-blue-950">Product</a></li>
-                <li><a href="/about" className="sub-title-font text-base font-medium hover:text-blue-950">About us</a></li>
-                <li><a href="/contact" className="sub-title-font text-base font-medium hover:text-blue-950">Contact us</a></li>
+                <li><a href="/about" className="sub-title-font text-base font-medium hover:text-blue-950">About</a></li>
+                <li><a href="/contact" className="sub-title-font text-base font-medium hover:text-blue-950">Contact</a></li>
               </ul>
             </nav>
 
@@ -74,8 +74,8 @@ const Header = () => {
                 <ul className="space-y-4">
                   <li><a href="/" className="sub-title-font text-base font-medium hover:text-blue-950 block">Home</a></li>
                   <li><a href="/product" className="sub-title-font text-base font-medium hover:text-blue-950 block">Product</a></li>
-                  <li><a href="/about" className="sub-title-font text-base font-medium hover:text-blue-950 block">About us</a></li>
-                  <li><a href="/contact" className="sub-title-font text-base font-medium hover:text-blue-950 block">Contact us</a></li>
+                  <li><a href="/about" className="sub-title-font text-base font-medium hover:text-blue-950 block">About </a></li>
+                  <li><a href="/contact" className="sub-title-font text-base font-medium hover:text-blue-950 block">Contact</a></li>
                 </ul>
               </nav>
 
