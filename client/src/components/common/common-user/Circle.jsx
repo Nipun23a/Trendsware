@@ -22,18 +22,20 @@ const Circle = ({number,text}) => {
                 font-bold
                 text-white
                 mb-1
+                font-rouge
             ">
                 {number}
             </span>
             <span className="
-                text-xs
-                sm:text-sm
-                md:text-base
-                font-medium
+                text-[20px]
+                sm:text-[20px]
+                md:text-[20px]
+                font-
                 text-white/90
                 text-center
                 px-2
                 max-w-[80%]
+                font-rouge
             ">
                 {text}
             </span>
