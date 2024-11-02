@@ -15,7 +15,7 @@ const OurStoryContainer = () => {
             <div className="main-container flex flex-col md:flex-row items-center md:items-start lg:items-center gap-8">
                 {/* Image Container */}
                 <div className="relative w-full sm:w-[400px] md:w-[500px] h-[400px] sm:h-[500px] md:h-[600px] border-solid border-[#D4D5CB] mx-auto">
-                    <img src={image1} alt="Our Story" className="w-full h-full object-cover rounded-lg shadow-lg blur-[1px]" />
+                    <img src={image1} alt="Our Story" className="w-full h-full object-cover rounded-lg shadow-lg" />
 
                     {/* Circle Overlay with Text */}
                     <div className="absolute -bottom-[30px] -right-[30px] sm:-bottom-[45px] sm:-right-[45px] w-[140px] h-[140px] sm:w-[200px] sm:h-[200px] bg-[#99D1FF] rounded-full flex items-center justify-center">
