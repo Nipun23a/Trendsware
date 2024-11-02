@@ -73,7 +73,7 @@ const DealOfDaysContainer = () => {
                     <h2 className="text-4xl sm:text-6xl font-bold text-blue-950 mb-4 font-libre">
                         Deal Of The Day
                     </h2>
-                    <p className="text-blue-950 font-poppins text-lg sm:text-2xl leading-relaxed sm:leading-[50px] font-light">
+                    <p className="text-blue-950 font-montserrat text-lg sm:text-2xl leading-relaxed sm:leading-[50px] font-light">
                         It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
                     </p>
                 </div>

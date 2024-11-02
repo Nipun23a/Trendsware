@@ -5,7 +5,7 @@ const NewItemContainer = () => {
     return (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
             <div className="NewItemTitleContainer text-center mb-12">
-                <h2 className="text-[60px] font-bold text-blue-950 mb-4 libre-baskavile-font">
+                <h2 className="text-[60px] font-bold text-blue-950 mb-4 font-libre">
                     New Arrivals
                 </h2>
                 <p className="text-gray-400 text-xl max-w-2xl mx-auto category-text text-center font-normal">

@@ -5,7 +5,7 @@ const AcheivmentContainer = () => {
     return (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 md:py-12 lg:py-14">
             <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] font-bold text-blue-950 mb-2 sm:mb-3 font-lexend">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] font-bold text-blue-950 mb-2 sm:mb-3 font-libre">
                     Our Milestones
                 </h1>
             </div>
