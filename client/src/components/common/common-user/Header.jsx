@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Search, ShoppingCart, Menu, X } from 'lucide-react';
 import LoginModal from "./LoginModal";
-
-
+import CartModal from "../../cart/cart-modal";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleSignUpClick = () => {
     setIsLoginModalOpen(true);
+  };
+
+  const handleCartClick = () => {
+    setIsCartOpen(true);
   };
 
   return (
@@ -47,7 +51,11 @@ const Header = () => {
                 />
                 <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#002A4F]" size={20} />
               </div>
-              <ShoppingCart className="text-[#002A4F] cursor-pointer" size={24} />
+              <ShoppingCart
+                  className="text-[#002A4F] cursor-pointer"
+                  size={24}
+                  onClick={handleCartClick}
+              />
               <button
                   className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full sing-up-button font-medium"
                   onClick={handleSignUpClick}
@@ -58,7 +66,11 @@ const Header = () => {
 
             {/* Mobile Icons */}
             <div className="flex lg:hidden items-center space-x-4">
-              <ShoppingCart className="text-[#002A4F] cursor-pointer" size={24} />
+              <ShoppingCart
+                  className="text-[#002A4F] cursor-pointer"
+                  size={24}
+                  onClick={handleCartClick}
+              />
             </div>
           </div>
 
@@ -103,6 +115,11 @@ const Header = () => {
         <LoginModal
             isOpen={isLoginModalOpen}
             onClose={() => setIsLoginModalOpen(false)}
+        />
+
+        <CartModal
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
         />
       </>
   );
