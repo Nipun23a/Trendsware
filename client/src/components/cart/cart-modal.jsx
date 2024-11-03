@@ -1,7 +1,8 @@
 import React, {useContext} from 'react';
-import { X, Trash2, Plus, Minus, Gift, ShoppingBasket } from 'lucide-react';
+import {X, Trash2, Plus, Minus, Gift, ShoppingBasket, ShoppingCart} from 'lucide-react';
 import { CartContext } from '../../context/Cart-Context';
 import { CustomButton, CustomAlert, CustomAlertDescription, CustomBadge } from '../ui/Custom-Component';
+import { useNavigate } from "react-router-dom";
 
 const CartModal = () => {
     const {
@@ -12,6 +13,8 @@ const CartModal = () => {
         setIsCartOpen,
         cartTotal
     } = useContext(CartContext);
+
+
 
     const handleClose = () => setIsCartOpen(false);
 
@@ -31,6 +34,8 @@ const CartModal = () => {
         }).format(price);
     };
 
+    const  navigate = useNavigate();
+
     return (
         <>
             {/* Overlay */}
@@ -47,10 +52,10 @@ const CartModal = () => {
                     ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 {/* Header */}
-                <div className="p-4 border-b flex items-center justify-between bg-blue-950">
+                <div className="p-4 border-b flex items-center justify-between bg-[#BAD7F2]">
                     <div className="flex items-center gap-2">
-                        <ShoppingBasket className="h-6 w-6 text-white" />
-                        <h2 className="text-lg font-semibold text-white font-libre">Your Cart</h2>
+                        <ShoppingBasket className="h-6 w-6 text-blue-950" />
+                        <h2 className="text-lg font-semibold text-blue-950 font-libre">Your Cart</h2>
                         <CustomBadge variant="secondary" className="ml-2">
                             {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
                         </CustomBadge>
@@ -59,7 +64,7 @@ const CartModal = () => {
                         onClick={handleClose}
                         className="p-1 hover:bg-blue-900 rounded-full transition-colors"
                     >
-                        <X className="h-6 w-6 text-white" />
+                        <X className="h-6 w-6 text-blue-950" />
                     </button>
                 </div>
 
@@ -119,8 +124,8 @@ const CartModal = () => {
                         ))
                     ) : (
                         <div className="flex flex-col items-center justify-center h-48 text-gray-500">
-                            <ShoppingBasket className="h-16 w-16 mb-4 text-gray-400" />
-                            <p className="text-lg font-medium mb-2 font-montserrat">Your cart is empty</p>
+                            <ShoppingCart className="h-16 w-16 mb-4 text-gray-400" />
+                            <p className="text-lg font-medium mb-2 font-montserrat text-blue-950">Your cart is empty</p>
                             <p className="text-sm text-gray-400 font-montserrat">Add items to get started</p>
                         </div>
                     )}
@@ -160,7 +165,10 @@ const CartModal = () => {
                         <div className="space-y-3">
                             <CustomButton
                                 className="w-full bg-orange-600 hover:bg-orange-500 text-white h-12 font-semibold"
-                                onClick={() => console.log('View Cart')}
+                                onClick={() => {
+                                    setIsCartOpen(false);
+                                    navigate('/cart');
+                                }}
                             >
                                 <ShoppingBasket className="w-5 h-5 mr-2" />
                                 View Cart
