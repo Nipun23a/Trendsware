@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
-import { CreditCard, ShoppingCart, Lock, User, MapPin, Phone } from 'lucide-react';
+import { CreditCard, ShoppingCart, Lock, User, Minus, Plus } from 'lucide-react';
+import { CartContext } from '../../context/Cart-Context';
+import {useContext, useState} from "react";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
@@ -10,7 +11,9 @@ const CheckoutForm = () => {
     const elements = useElements();
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState(false);
-    const [quantity, setQuantity] = useState(1);
+
+    // Get cart context
+    const { cartItems, updateQuantity, removeFromCart, cartTotal } = useContext(CartContext);
 
     // Customer Information State
     const [customerInfo, setCustomerInfo] = useState({
@@ -30,9 +33,6 @@ const CheckoutForm = () => {
         cvc: '',
     });
 
-    const productPrice = 49.99;
-    const total = (productPrice * quantity).toFixed(2);
-
     const handleCustomerInfoChange = (e) => {
         setCustomerInfo({
             ...customerInfo,
@@ -47,12 +47,26 @@ const CheckoutForm = () => {
         });
     };
 
+    const handleQuantityUpdate = (itemId, size, newQuantity) => {
+        updateQuantity(itemId, size, newQuantity);
+    };
+
+    const handleRemoveItem = (itemId, size) => {
+        removeFromCart(itemId, size);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setProcessing(true);
         setError(null);
 
         if (!stripe || !elements) {
+            return;
+        }
+
+        if (cartItems.length === 0) {
+            setError('Your cart is empty');
+            setProcessing(false);
             return;
         }
 
@@ -73,8 +87,9 @@ const CheckoutForm = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    amount: total,
+                    amount: cartTotal,
                     customer: customerInfo,
+                    items: cartItems
                 }),
             });
 
@@ -102,7 +117,7 @@ const CheckoutForm = () => {
                             {/* Customer Information Section */}
                             <div className="mb-8">
                                 <h2 className="text-xl font-semibold mb-4 flex items-center text-blue-950 font-montserrat">
-                                    <User className="w-5 h-5 mr-2 text-blue-950" />
+                                    <User className="w-5 h-5 mr-2 text-blue-950"/>
                                     Customer Information
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -195,7 +210,7 @@ const CheckoutForm = () => {
                             {/* Payment Information Section */}
                             <div className="mb-8">
                                 <h2 className="text-xl font-semibold mb-4 flex items-center text-blue-950 font-montserrat">
-                                    <CreditCard className="w-5 h-5 mr-2 text-blue-950" />
+                                    <CreditCard className="w-5 h-5 mr-2 text-blue-950"/>
                                     Payment Information
                                 </h2>
                                 <div>
@@ -227,7 +242,7 @@ const CheckoutForm = () => {
                                             required
                                         >
                                             <option value="">MM</option>
-                                            {Array.from({ length: 12 }, (_, i) => {
+                                            {Array.from({length: 12}, (_, i) => {
                                                 const month = (i + 1).toString().padStart(2, '0');
                                                 return <option key={month} value={month}>{month}</option>;
                                             })}
@@ -245,7 +260,7 @@ const CheckoutForm = () => {
                                             required
                                         >
                                             <option value="">YYYY</option>
-                                            {Array.from({ length: 10 }, (_, i) => {
+                                            {Array.from({length: 10}, (_, i) => {
                                                 const year = (new Date().getFullYear() + i).toString();
                                                 return <option key={year} value={year}>{year}</option>;
                                             })}
@@ -271,19 +286,71 @@ const CheckoutForm = () => {
 
                             {/* Order Summary */}
                             <div className="border-t pt-6 mb-8">
-                                <h2 className="text-xl font-semibold mb-4 text-blue-950 font-montserrat">Order Summary</h2>
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-blue-950 font-montserrat">Subtotal ({quantity} items)</span>
-                                    <span className="font-semibold text-blue-950 font-montserrat">${total}</span>
-                                </div>
-                                <div className="flex justify-between items-center mb-2">
-                                    <span className="text-blue-950 font-montserrat">Shipping</span>
-                                    <span className="text-green-600 font-montserrat">Free</span>
-                                </div>
-                                <div className="flex justify-between items-center text-xl font-bold mt-4 font-montserrat text-blue-950 ">
-                                    <span>Total</span>
-                                    <span>${total}</span>
-                                </div>
+                                <h2 className="text-xl font-semibold mb-4 text-blue-950">Order Summary</h2>
+
+                                {cartItems.length === 0 ? (
+                                    <div className="text-gray-500 text-center py-4">
+                                        Your cart is empty
+                                    </div>
+                                ) : (
+                                    <>
+                                        {cartItems.map((item) => (
+                                            <div key={`${item.id}-${item.size}`}
+                                                 className="flex items-center justify-between py-4 border-b">
+                                                <div className="flex-1">
+                                                    <h3 className="font-medium text-blue-950 font-montserrat">{item.name}</h3>
+                                                    <p className="text-sm text-gray-600 font-montserrat">Size: {item.size}</p>
+                                                    <p className="text-sm text-gray-600 font-montserrat">${item.price.toFixed(2)} each</p>
+                                                </div>
+
+                                                <div className="flex items-center space-x-4">
+                                                    <div className="flex items-center space-x-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleQuantityUpdate(item.id, item.size, item.quantity - 1)}
+                                                            className="p-1 rounded-md hover:bg-gray-100"
+                                                        >
+                                                            <Minus className="w-4 h-4"/>
+                                                        </button>
+                                                        <span className="w-8 text-center font-montserrat">{item.quantity}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleQuantityUpdate(item.id, item.size, item.quantity + 1)}
+                                                            className="p-1 rounded-md hover:bg-gray-100"
+                                                        >
+                                                            <Plus className="w-4 h-4"/>
+                                                        </button>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveItem(item.id, item.size)}
+                                                        className="text-red-500 hover:text-red-700 font-montserrat"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        <div className="mt-4 space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-blue-950 font-montserrat">Subtotal</span>
+                                                <span className="font-semibold text-blue-950 font-montserrat">
+                                                    ${cartTotal.toFixed(2)}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-blue-950 font-montserrat">Shipping</span>
+                                                <span className="text-green-600 font-montserrat">Free</span>
+                                            </div>
+                                            <div
+                                                className="flex justify-between items-center text-xl font-bold mt-4 text-blue-950 font-montserrat">
+                                                <span>Total</span>
+                                                <span>${cartTotal.toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             {error && (
@@ -294,22 +361,22 @@ const CheckoutForm = () => {
 
                             <button
                                 type="submit"
-                                disabled={processing}
+                                disabled={processing || cartItems.length === 0}
                                 className={`w-full flex items-center justify-center bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors font-montserrat
-                  ${processing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    ${(processing || cartItems.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 {processing ? (
                                     'Processing...'
                                 ) : (
                                     <>
-                                        <Lock className="w-5 h-5 mr-2" />
-                                        Pay ${total} Securely
+                                        <Lock className="w-5 h-5 mr-2"/>
+                                        Pay ${cartTotal.toFixed(2)} Securely
                                     </>
                                 )}
                             </button>
 
                             <div className="mt-4 flex items-center justify-center text-sm text-gray-500 font-montserrat">
-                                <ShoppingCart className="w-4 h-4 mr-1" />
+                                <ShoppingCart className="w-4 h-4 mr-1"/>
                                 <span>Secure payment powered by Stripe</span>
                             </div>
                         </form>
@@ -323,7 +390,7 @@ const CheckoutForm = () => {
 const CheckoutPage = () => {
     return (
         <Elements stripe={stripePromise}>
-            <CheckoutForm />
+            <CheckoutForm/>
         </Elements>
     );
 };

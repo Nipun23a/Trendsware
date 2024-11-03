@@ -175,7 +175,10 @@ const CartModal = () => {
                             </CustomButton>
                             <CustomButton
                                 className="w-full bg-blue-950 hover:bg-blue-900 text-white h-12 font-semibold"
-                                onClick={() => console.log('Proceed to Checkout')}
+                                onClick={() => {
+                                    setIsCartOpen(false);
+                                    navigate('/payment');
+                                }}
                             >
                                 <Gift className="w-5 h-5 mr-2" />
                                 Checkout

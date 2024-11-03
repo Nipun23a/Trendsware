@@ -143,12 +143,14 @@ const CartPage = () => {
                             </div>
 
                             <div className="mt-8 space-y-4">
-                                <CustomButton
-                                    className="w-full bg-blue-950 hover:bg-blue-900 text-white h-12 font-semibold rounded-full font-montserrat"
-                                    onClick={() => console.log('Proceed to Checkout')}
-                                >
-                                    Proceed to Checkout
-                                </CustomButton>
+                                <Link to="/payment">
+                                    <CustomButton
+                                        className="w-full bg-blue-950 hover:bg-blue-900 text-white h-12 font-semibold rounded-full font-montserrat"
+                                        onClick={() => console.log('Proceed to Checkout')}
+                                    >
+                                        Proceed to Checkout
+                                    </CustomButton>
+                                </Link>
                                 <Link to="/product">
                                     <CustomButton
                                         className="w-full bg-gray-100 hover:bg-gray-200 text-blue-950 h-12 font-semibold rounded-full font-montserrat mt-6"
