@@ -1,8 +1,24 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { ShoppingCartIcon, Eye } from "lucide-react";
 import PrdouctImage from "../../../assets/images/products/tshirt.png";
+import {CartContext} from "../../../context/Cart-Context";
 
 const ItemContainer = () => {
+
+    const { addToCart, setIsCartOpen } = useContext(CartContext);
+
+    const product = {
+        id: 1,
+        name: "Polo-TShirt",
+        price: 99.99,
+        category: "Men's Wear",
+        image: PrdouctImage
+    };
+
+    const handleQuickAdd = () => {
+        addToCart(product, "M"); // Default size
+        setIsCartOpen(true);
+    };
     return (
         <div className="itemContainer w-[280px] bg-white rounded-2xl shadow-2xl overflow-hidden">
             <div className="item-image-container relative group">
@@ -18,7 +34,8 @@ const ItemContainer = () => {
                     <a className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-blue-950 hover:text-white transition-colors" href="/single-product">
                         <Eye size={20} />
                     </a>
-                    <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-orange-400 hover:text-white transition-colors">
+                    <button className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-orange-400 hover:text-white transition-colors"
+                    onClick={handleQuickAdd}>
                         <ShoppingCartIcon size={20} />
                     </button>
                 </div>

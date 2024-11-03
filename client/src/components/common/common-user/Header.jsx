@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { Search, ShoppingCart, Menu, X } from 'lucide-react';
 import LoginModal from "./LoginModal";
 import CartModal from "../../cart/cart-modal";
+import {CartContext} from "../../../context/Cart-Context";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const {setIsCartOpen} = useContext(CartContext);
 
   const handleSignUpClick = () => {
     setIsLoginModalOpen(true);
@@ -117,10 +118,7 @@ const Header = () => {
             onClose={() => setIsLoginModalOpen(false)}
         />
 
-        <CartModal
-            isOpen={isCartOpen}
-            onClose={() => setIsCartOpen(false)}
-        />
+        <CartModal/>
       </>
   );
 };

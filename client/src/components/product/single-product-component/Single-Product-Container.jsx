@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { ShoppingCart, Heart } from 'lucide-react';
 import ItemImage from "../../../assets/images/products/tshirt.png";
 import AltImage1 from "../../../assets/images/products/tshirt.png";
 import AltImage2 from "../../../assets/images/products/tshirt.png";
+import {CartContext} from "../../../context/Cart-Context";
 
 const SingleProductContainer = () => {
+    const { addToCart } = useContext(CartContext);
     const [selectedSize, setSelectedSize] = useState('');
     const [mainImage, setMainImage] = useState(ItemImage);
     const [isImageChanging, setIsImageChanging] = useState(false);
@@ -29,6 +31,12 @@ const SingleProductContainer = () => {
             setMainImage(image);
             setIsImageChanging(false);
         }, 300);
+    };
+
+    const handleAddToCart = () => {
+        if (selectedSize) {
+            addToCart(product, selectedSize);
+        }
     };
 
     return (
@@ -109,6 +117,7 @@ const SingleProductContainer = () => {
                                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                             disabled={!selectedSize}
+                            onClick={handleAddToCart}
                         >
                             <ShoppingCart className="w-5 h-5" />
                             Add to Cart

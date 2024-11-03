@@ -1,35 +1,34 @@
-import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, Gift, ShoppingBasket, Frown } from 'lucide-react';
-import { Card } from '../ui/Card';
-import ProductImage from '../../assets/images/products/tshirt.png';
+import React, {useContext} from 'react';
+import { X, Trash2, Plus, Minus, Gift, ShoppingBasket } from 'lucide-react';
+import { CartContext } from '../../context/Cart-Context';
+import { CustomButton, CustomAlert, CustomAlertDescription, CustomBadge } from '../ui/Custom-Component';
 
-const CartModal = ({ isOpen, onClose }) => {
-    const [cartItems, setCartItems] = useState([
-        { id: 1, name: "Sample Product", price: 99.99, quantity: 1, size: "M", image: ProductImage }
-    ]);
+const CartModal = () => {
+    const {
+        cartItems,
+        removeFromCart,
+        updateQuantity,
+        isCartOpen,
+        setIsCartOpen,
+        cartTotal
+    } = useContext(CartContext);
 
-    const increaseQuantity = (itemId) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) =>
-                item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
-            )
-        );
+    const handleClose = () => setIsCartOpen(false);
+
+    const handleQuantityChange = (itemId, size, currentQuantity, change) => {
+        const newQuantity = currentQuantity + change;
+        if (newQuantity < 1) {
+            removeFromCart(itemId, size);
+        } else {
+            updateQuantity(itemId, size, newQuantity);
+        }
     };
 
-    const decreaseQuantity = (itemId) => {
-        setCartItems((prevItems) =>
-            prevItems.map((item) =>
-                item.id === itemId ? { ...item, quantity: Math.max(item.quantity - 1, 1) } : item
-            )
-        );
-    };
-
-    const removeItem = (itemId) => {
-        setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-    };
-
-    const calculateTotal = () => {
-        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(price);
     };
 
     return (
@@ -37,95 +36,143 @@ const CartModal = ({ isOpen, onClose }) => {
             {/* Overlay */}
             <div
                 className={`fixed inset-0 bg-black/30 transition-opacity duration-300 z-40
-          ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                onClick={onClose}
+                    ${isCartOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                onClick={handleClose}
             />
 
             {/* Cart Modal */}
             <div
                 className={`fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-xl z-50 
-          transform transition-transform duration-300 ease-in-out
-          ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                    transform transition-transform duration-300 ease-in-out
+                    ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
                 {/* Header */}
-                <div className="p-4 border-b flex justify-end">
+                <div className="p-4 border-b flex items-center justify-between bg-blue-950">
+                    <div className="flex items-center gap-2">
+                        <ShoppingBasket className="h-6 w-6 text-white" />
+                        <h2 className="text-lg font-semibold text-white">Your Cart</h2>
+                        <CustomBadge variant="secondary" className="ml-2">
+                            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+                        </CustomBadge>
+                    </div>
                     <button
-                        onClick={onClose}
-                        className="p-1 hover:bg-blue-100 rounded-full"
+                        onClick={handleClose}
+                        className="p-1 hover:bg-blue-900 rounded-full transition-colors"
                     >
-                        <X className="h-6 w-6 text-gray-600" />
+                        <X className="h-6 w-6 text-white" />
                     </button>
                 </div>
 
                 {/* Cart Items */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[calc(100vh-240px)]">
                     {cartItems.length > 0 ? (
                         cartItems.map((item) => (
-                            <Card key={item.id} className="border border-gray-200">
+                            <div key={`${item.id}-${item.size}`}
+                                 className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                                 <div className="flex gap-4 p-4">
-                                    <div className="w-20 h-20 bg-gray-100 rounded-lg">
+                                    <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
                                         <img
                                             src={item.image}
                                             alt={item.name}
-                                            className="w-full h-full object-cover rounded-lg"
+                                            className="w-full h-full object-cover"
                                         />
                                     </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-medium text-blue-950 font-montserrat">{item.name}</h3>
-                                        <p className="text-sm text-gray-500 font-montserrat">Size: {item.size}</p>
-                                        <div className="flex justify-between items-center mt-2">
-                                            <div className="flex items-center space-x-2">
-                                                <button onClick={() => decreaseQuantity(item.id)} className="p-1 hover:bg-gray-100 rounded ">
-                                                    <Minus className="h-4 w-4" />
-                                                </button>
-                                                <span className="w-8 text-center">{item.quantity}</span>
-                                                <button onClick={() => increaseQuantity(item.id)} className="p-1 hover:bg-gray-100 rounded">
-                                                    <Plus className="h-4 w-4" />
-                                                </button>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <h3 className="font-medium text-blue-950 truncate">{item.name}</h3>
+                                                <p className="text-sm text-gray-500">Size: {item.size}</p>
+                                                <p className="font-semibold text-blue-950 mt-1">
+                                                    {formatPrice(item.price)}
+                                                </p>
                                             </div>
-                                            <button onClick={() => removeItem(item.id)} className="text-red-500 hover:text-red-600">
+                                            <button
+                                                onClick={() => removeFromCart(item.id, item.size)}
+                                                className="text-red-500 hover:text-red-600 p-1 hover:bg-red-50 rounded-full transition-colors"
+                                            >
                                                 <Trash2 className="h-5 w-5" />
                                             </button>
                                         </div>
+                                        <div className="flex items-center justify-between mt-3">
+                                            <div className="flex items-center space-x-1 bg-gray-100 rounded-lg">
+                                                <button
+                                                    onClick={() => handleQuantityChange(item.id, item.size, item.quantity, -1)}
+                                                    className="p-2 hover:bg-gray-200 rounded-l-lg transition-colors"
+                                                >
+                                                    <Minus className="h-4 w-4" />
+                                                </button>
+                                                <span className="w-10 text-center font-medium">{item.quantity}</span>
+                                                <button
+                                                    onClick={() => handleQuantityChange(item.id, item.size, item.quantity, 1)}
+                                                    className="p-2 hover:bg-gray-200 rounded-r-lg transition-colors"
+                                                >
+                                                    <Plus className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                            <p className="font-semibold text-blue-950">
+                                                {formatPrice(item.price * item.quantity)}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </Card>
+                            </div>
                         ))
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-full text-gray-500 font-montserrat text-center">
-                            <Frown className="h-16 w-16 mb-4" />
-                            <p>Your cart is empty</p>
+                        <div className="flex flex-col items-center justify-center h-48 text-gray-500">
+                            <ShoppingBasket className="h-16 w-16 mb-4 text-gray-400" />
+                            <p className="text-lg font-medium mb-2">Your cart is empty</p>
+                            <p className="text-sm text-gray-400">Add items to get started</p>
                         </div>
                     )}
                 </div>
 
                 {/* Footer */}
                 {cartItems.length > 0 && (
-                    <div className="border-t p-4 bg-gray-50">
-                        <div className="flex justify-between mb-4">
-                            <span className="font-medium font-montserrat">Total</span>
-                            <span className="font-semibold font-montserrat">${calculateTotal()}</span>
+                    <div className="border-t bg-gray-50 p-4 space-y-4">
+                        {/* Order Summary */}
+                        <div className="space-y-2">
+                            <div className="flex justify-between text-sm text-gray-600">
+                                <span>Subtotal</span>
+                                <span>{formatPrice(cartTotal)}</span>
+                            </div>
+                            <div className="flex justify-between text-sm text-gray-600">
+                                <span>Shipping</span>
+                                <span>Calculated at checkout</span>
+                            </div>
+                            <div className="border-t pt-2 mt-2">
+                                <div className="flex justify-between font-semibold text-lg text-blue-950">
+                                    <span>Total</span>
+                                    <span>{formatPrice(cartTotal)}</span>
+                                </div>
+                            </div>
                         </div>
-                        <button
-                            type="submit"
-                            className="mt-5 w-full p-3 text-white bg-blue-950 rounded-md
-                        hover:bg-blue-900 transition-all duration-300
-                        font-montserrat font-bold flex items-center justify-center gap-2
-                        shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                        >
-                            <ShoppingBasket className="w-5 h-5" />
-                            View Basket
-                        </button>
-                        <button
-                            type="submit"
-                            className="mt-5 w-full p-3 text-white bg-blue-950 rounded-md
-                        hover:bg-blue-900 transition-all duration-300
-                        font-montserrat font-bold flex items-center justify-center gap-2
-                        shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                        >
-                            <Gift className="w-5 h-5" />
-                            Confirm Order
-                        </button>
+
+                        {/* Free Shipping Alert */}
+                        {cartTotal < 100 && (
+                            <CustomAlert variant="info">
+                                <CustomAlertDescription>
+                                    Add {formatPrice(100 - cartTotal)} more for free shipping!
+                                </CustomAlertDescription>
+                            </CustomAlert>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="space-y-3">
+                            <CustomButton
+                                className="w-full bg-blue-950 hover:bg-blue-900 text-white h-12 font-semibold"
+                                onClick={() => console.log('View Cart')}
+                            >
+                                <ShoppingBasket className="w-5 h-5 mr-2" />
+                                View Cart
+                            </CustomButton>
+                            <CustomButton
+                                className="w-full bg-blue-950 hover:bg-blue-900 text-white h-12 font-semibold"
+                                onClick={() => console.log('Proceed to Checkout')}
+                            >
+                                <Gift className="w-5 h-5 mr-2" />
+                                Checkout
+                            </CustomButton>
+                        </div>
                     </div>
                 )}
             </div>
@@ -134,5 +181,3 @@ const CartModal = ({ isOpen, onClose }) => {
 };
 
 export default CartModal;
-
-
