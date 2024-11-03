@@ -50,7 +50,7 @@ const CartModal = () => {
                 <div className="p-4 border-b flex items-center justify-between bg-blue-950">
                     <div className="flex items-center gap-2">
                         <ShoppingBasket className="h-6 w-6 text-white" />
-                        <h2 className="text-lg font-semibold text-white">Your Cart</h2>
+                        <h2 className="text-lg font-semibold text-white font-libre">Your Cart</h2>
                         <CustomBadge variant="secondary" className="ml-2">
                             {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
                         </CustomBadge>
@@ -80,9 +80,9 @@ const CartModal = () => {
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <h3 className="font-medium text-blue-950 truncate">{item.name}</h3>
-                                                <p className="text-sm text-gray-500">Size: {item.size}</p>
-                                                <p className="font-semibold text-blue-950 mt-1">
+                                                <h3 className="font-medium text-blue-950 truncate font-montserrat">{item.name}</h3>
+                                                <p className="text-sm text-blue-950 font-montserrat">Size: {item.size}</p>
+                                                <p className="font-semibold text-blue-950 mt-1 font-montserrat">
                                                     {formatPrice(item.price)}
                                                 </p>
                                             </div>
@@ -101,7 +101,7 @@ const CartModal = () => {
                                                 >
                                                     <Minus className="h-4 w-4" />
                                                 </button>
-                                                <span className="w-10 text-center font-medium">{item.quantity}</span>
+                                                <span className="w-10 text-center font-medium font-montserrat">{item.quantity}</span>
                                                 <button
                                                     onClick={() => handleQuantityChange(item.id, item.size, item.quantity, 1)}
                                                     className="p-2 hover:bg-gray-200 rounded-r-lg transition-colors"
@@ -109,7 +109,7 @@ const CartModal = () => {
                                                     <Plus className="h-4 w-4" />
                                                 </button>
                                             </div>
-                                            <p className="font-semibold text-blue-950">
+                                            <p className="font-semibold text-blue-950 font-montserrat">
                                                 {formatPrice(item.price * item.quantity)}
                                             </p>
                                         </div>
@@ -120,8 +120,8 @@ const CartModal = () => {
                     ) : (
                         <div className="flex flex-col items-center justify-center h-48 text-gray-500">
                             <ShoppingBasket className="h-16 w-16 mb-4 text-gray-400" />
-                            <p className="text-lg font-medium mb-2">Your cart is empty</p>
-                            <p className="text-sm text-gray-400">Add items to get started</p>
+                            <p className="text-lg font-medium mb-2 font-montserrat">Your cart is empty</p>
+                            <p className="text-sm text-gray-400 font-montserrat">Add items to get started</p>
                         </div>
                     )}
                 </div>
@@ -131,16 +131,16 @@ const CartModal = () => {
                     <div className="border-t bg-gray-50 p-4 space-y-4">
                         {/* Order Summary */}
                         <div className="space-y-2">
-                            <div className="flex justify-between text-sm text-gray-600">
+                            <div className="flex justify-between text-sm text-gray-600 font-montserrat">
                                 <span>Subtotal</span>
                                 <span>{formatPrice(cartTotal)}</span>
                             </div>
-                            <div className="flex justify-between text-sm text-gray-600">
+                            <div className="flex justify-between text-sm text-gray-600 font-montserrat">
                                 <span>Shipping</span>
                                 <span>Calculated at checkout</span>
                             </div>
                             <div className="border-t pt-2 mt-2">
-                                <div className="flex justify-between font-semibold text-lg text-blue-950">
+                                <div className="flex justify-between font-semibold text-lg text-blue-950 font-montserrat">
                                     <span>Total</span>
                                     <span>{formatPrice(cartTotal)}</span>
                                 </div>
@@ -159,7 +159,7 @@ const CartModal = () => {
                         {/* Action Buttons */}
                         <div className="space-y-3">
                             <CustomButton
-                                className="w-full bg-blue-950 hover:bg-blue-900 text-white h-12 font-semibold"
+                                className="w-full bg-orange-600 hover:bg-orange-500 text-white h-12 font-semibold"
                                 onClick={() => console.log('View Cart')}
                             >
                                 <ShoppingBasket className="w-5 h-5 mr-2" />

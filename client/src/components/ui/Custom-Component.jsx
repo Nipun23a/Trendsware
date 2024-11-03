@@ -22,7 +22,7 @@ export const CustomAlert = ({ children, className = '', variant = 'default', ...
 
     return (
         <div
-            className={`relative rounded-lg border p-4 
+            className={`relative rounded-lg border p-4 font-montserrat
       ${variants[variant]} ${className}`}
             role="alert"
             {...props}
@@ -34,7 +34,7 @@ export const CustomAlert = ({ children, className = '', variant = 'default', ...
 
 export const CustomAlertDescription = ({ children, className = '', ...props }) => (
     <div
-        className={`text-sm leading-6 mt-1 ${className}`}
+        className={`text-sm leading-6 mt-1 font-montserrat ${className}`}
         {...props}
     >
         {children}
@@ -53,7 +53,7 @@ export const CustomBadge = ({ children, className = '', variant = 'default', ...
 
     return (
         <span
-            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium 
+            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium  font-montserrat
       transition-colors ${variants[variant]} ${className}`}
             {...props}
         >
