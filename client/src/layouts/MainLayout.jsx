@@ -8,6 +8,7 @@ import Product from "../pages/common-pages/Product";
 import FooterContainer from "../components/common/common-user/Footer-Container";
 import SingleProductContainer from "../components/product/single-product-component/Single-Product-Container";
 import CartPage from "../components/cart/cart-page";
+import CheckoutPage from "../components/cart/check-out-form";
 
 
 
@@ -23,6 +24,7 @@ const MainLayout = () => {
                     <Route path = "/single-product" element={<SingleProductContainer/>}/>
                     <Route path = "/contact" element = {<Contact/>}/>
                     <Route path = "/cart" element={<CartPage/>}/>
+                    <Route path= "/payment" element={<CheckoutPage/>}/>
                 </Routes>
             </main>
             <FooterContainer/>
