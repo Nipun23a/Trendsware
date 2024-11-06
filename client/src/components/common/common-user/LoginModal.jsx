@@ -8,6 +8,7 @@ const LoginModal = ({ isOpen, onClose }) => {
     const clientID = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
     const redirectURI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
     const facebookID = process.env.REACT_APP_FACEBOOK_APP_ID;
+    const twitterID = process.env.REACT_APP_TWEETER_APP_ID;
 
     useEffect(() => {
         if (isOpen) {
@@ -275,9 +276,6 @@ const LoginModal = ({ isOpen, onClose }) => {
                                             fill="#EA4335"
                                         />
                                     </svg>
-                                </button>
-                                <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                    <Twitter size={24} className="text-blue-400" />
                                 </button>
                             </div>
                         </div>
