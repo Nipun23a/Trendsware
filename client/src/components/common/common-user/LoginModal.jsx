@@ -7,6 +7,7 @@ const LoginModal = ({ isOpen, onClose }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const clientID = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
     const redirectURI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
+    const facebookID = process.env.REACT_APP_FACEBOOK_APP_ID;
 
     useEffect(() => {
         if (isOpen) {
@@ -35,6 +36,12 @@ const LoginModal = ({ isOpen, onClose }) => {
 
     const handleGoogleFailure = (error) => {
         console.log("Google Failure",error);
+    }
+
+    const handleFacebookLogin = (response) => {
+        const facebookLoginUrl = `https://www.facebook.com/v14.0/dialog/oauth?client_id=${facebookID}&redirect_uri=${redirectURI}&scope=email`;
+        window.location.href = facebookLoginUrl;
+        console.log(response)
     }
 
     if (!isOpen) return null;
@@ -242,7 +249,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                             </div>
 
                             <div className="flex justify-center space-x-4">
-                                <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50" onClick={handleFacebookLogin}>
                                     <Facebook size={24} className="text-blue-600" />
                                 </button>
                                 <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50" onClick={handleGoogleLogin}>
