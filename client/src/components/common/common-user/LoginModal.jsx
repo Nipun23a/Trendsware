@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { X, Mail, Lock, Facebook, Twitter, User, } from "lucide-react";
+import { X, Mail, Lock, Facebook,  User, } from "lucide-react";
 import LoginModalImage from "../../../assets/images/login-modal-image.jpg";
 
 const LoginModal = ({ isOpen, onClose }) => {
@@ -8,7 +8,6 @@ const LoginModal = ({ isOpen, onClose }) => {
     const clientID = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
     const redirectURI = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
     const facebookID = process.env.REACT_APP_FACEBOOK_APP_ID;
-    const twitterID = process.env.REACT_APP_TWEETER_APP_ID;
 
     useEffect(() => {
         if (isOpen) {
@@ -35,9 +34,7 @@ const LoginModal = ({ isOpen, onClose }) => {
         console.log("Google Login Successfully",response);
     }
 
-    const handleGoogleFailure = (error) => {
-        console.log("Google Failure",error);
-    }
+
 
     const handleFacebookLogin = (response) => {
         const facebookLoginUrl = `https://www.facebook.com/v14.0/dialog/oauth?client_id=${facebookID}&redirect_uri=${redirectURI}&scope=email`;

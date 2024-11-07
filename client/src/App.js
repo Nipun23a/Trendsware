@@ -1,10 +1,9 @@
 import React from 'react';
-import Header from "./components/common/common-user/Header";
-import Home from "./pages/common-pages/Home";
 import './App.css';
 import {BrowserRouter, Routes,Route} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import {CartProvider} from "./context/Cart-Context";
+import Auth from "./layouts/Auth";
 
 function App() {
     return (
@@ -12,6 +11,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/*" element = {<MainLayout/>}/>
+                    <Route path="/auth/*" element={<Auth />} />
                 </Routes>
             </BrowserRouter>
         </CartProvider>
