@@ -19,7 +19,7 @@ const UserDropdown = () => {
   return (
     <>
       <a
-        className="text-blueGray-500 block"
+        className="text-gray-500 block"
         href="#pablo"
         ref={btnDropdownRef}
         onClick={(e) => {
@@ -47,7 +47,7 @@ const UserDropdown = () => {
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-500"
           }
           onClick={(e) => e.preventDefault()}
         >
@@ -56,7 +56,7 @@ const UserDropdown = () => {
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-500"
           }
           onClick={(e) => e.preventDefault()}
         >
@@ -65,7 +65,7 @@ const UserDropdown = () => {
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-500"
           }
           onClick={(e) => e.preventDefault()}
         >
@@ -75,11 +75,11 @@ const UserDropdown = () => {
         <a
           href="#pablo"
           className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-red-600"
           }
           onClick={(e) => e.preventDefault()}
         >
-          Seprated link
+          Sign Out
         </a>
       </div>
     </>
