@@ -1,5 +1,5 @@
 import React from 'react';
-import CardAllProduct from "../../components/admin-component/Cards/CardAllProduct";
+import CardAllProduct from "../../../components/admin-component/Product/CardAllProduct";
 
 
 

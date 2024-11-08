@@ -14,7 +14,8 @@ import Dashboard from "../views/admin/Dashboard.js";
 import Maps from "../views/admin/Maps.js";
 import Settings from "../views/admin/Settings.js";
 import Tables from "../views/admin/Tables.js";
-import Product from "../views/admin/Product";
+import Product from "../views/admin/Product/Product";
+import CreateProduct from "../views/admin/Product/NewProduct";
 
 export default function Admin() {
   return (
@@ -28,6 +29,7 @@ export default function Admin() {
           <Routes>
             <Route path = "/dashboard" element={<Dashboard/>}  />
             <Route path="/products" element={<Product/>} />
+            <Route path="/products/create" element={<CreateProduct/>}/>
             <Route path="/settings" exact component={Settings} />
             <Route path="/tables" exact component={Tables} />
           </Routes>
