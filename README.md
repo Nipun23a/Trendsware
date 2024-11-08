@@ -6,4 +6,5 @@
   <li>Mongo DB and Firebase</li>
   <li>React</li>
   <li>Tailwind CSS</li>
+  <li>Notus React Dashboard</li>
 </ul>
