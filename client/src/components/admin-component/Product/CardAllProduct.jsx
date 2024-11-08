@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import Modal from "../Modal/Modal";
 
 const CardAllProduct = () => {
     const navigate = useNavigate();
+
+    const [showModal,setShowModal] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const products = [
         { id: 1, name: 'Product A',sku: 'SKU0123456789', quantity: 4569, getPrice: 46.53, sellPrice: 50.87,description:"This is Product A Description" },
         { id: 2, name: 'Product B',sku: 'SKU0123456789', quantity: 3985, getPrice: 46.53, sellPrice: 46.53,description:"This is Product B Description" },
@@ -14,6 +18,17 @@ const CardAllProduct = () => {
     const handleEditClick = (product) => {
         navigate(`/admin/products/edit/${product.id}}`,{state: {product}});
     };
+
+    const handleDeactivateClick = (product) => {
+      setSelectedProduct(product);
+      setShowModal(true);
+    };
+
+    const handleConfirmDeactivate = () => {
+        console.log(`Product ${selectedProduct.name} deactivated`);
+        setShowModal(false);
+        setSelectedProduct(null);
+    }
 
     return (
         <>
@@ -93,7 +108,9 @@ const CardAllProduct = () => {
                                         Edit
                                     </button>
                                     <button
-                                        className="bg-red-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+                                        className="bg-red-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                        onClick={() => handleDeactivateClick(product)}
+                                    >
                                         Deactivate
                                     </button>
                                 </td>
@@ -103,6 +120,14 @@ const CardAllProduct = () => {
                     </table>
                 </div>
             </div>
+            {showModal && (
+                <Modal
+                    title="Deactivate Product"
+                    message={`Are you sure you want to deactivate ${selectedProduct.name}?`}
+                    onConfirm={handleConfirmDeactivate}
+                    onClose={() => setShowModal(false)}
+                />
+            )}
         </>
     );
 };
