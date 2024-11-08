@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const clientID = process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID;
