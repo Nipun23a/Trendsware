@@ -14,10 +14,11 @@ import Dashboard from "../views/admin/Dashboard.js";
 import Maps from "../views/admin/Maps.js";
 import Settings from "../views/admin/Settings.js";
 import Tables from "../views/admin/Tables.js";
+import Product from "../views/admin/Product";
 
 export default function Admin() {
   return (
-    <>
+    <div className = "font-montserrat">
       <Sidebar />
       <div className="relative md:ml-64 bg-blueGray-100">
         <AdminNavbar />
@@ -26,13 +27,13 @@ export default function Admin() {
         <div className="px-4 md:px-10 mx-auto w-full -m-24">
           <Routes>
             <Route path = "/dashboard" element={<Dashboard/>}  />
-            <Route path="/maps" exact component={Maps} />
+            <Route path="/products" element={<Product/>} />
             <Route path="/settings" exact component={Settings} />
             <Route path="/tables" exact component={Tables} />
           </Routes>
         </div>
         <FooterAdmin />
       </div>
-    </>
+    </div>
   );
 }
