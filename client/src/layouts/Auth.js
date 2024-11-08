@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 
 // components
 import Navbar from "../components/admin-component/Navbars/AuthNavbar.js";
@@ -28,7 +28,7 @@ export default function Auth() {
                         }}
                     ></div>
                     <Routes>
-                        <Route path = "/login" element={<Login />} />
+                        <Route path = "/login" element={<Login />}  />
                     </Routes>
                 </section>
                 <FooterSmall absolute />

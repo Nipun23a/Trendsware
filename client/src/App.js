@@ -4,6 +4,9 @@ import {BrowserRouter, Routes,Route} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import {CartProvider} from "./context/Cart-Context";
 import Auth from "./layouts/Auth";
+import Profile from "./views/Profile";
+import Admin from "./layouts/Admin";
+
 
 function App() {
     return (
@@ -12,6 +15,8 @@ function App() {
                 <Routes>
                     <Route path="/*" element = {<MainLayout/>}/>
                     <Route path="/auth/*" element={<Auth />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/admin/*" element={<Admin />} />
                 </Routes>
             </BrowserRouter>
         </CartProvider>
