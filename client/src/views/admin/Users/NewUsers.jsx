@@ -1,17 +1,17 @@
 import React from 'react';
-import CreateNewProduct from "../../../components/admin-component/Product/CreateNewProduct";
+import CreateNewUsers from "../../../components/admin-component/Users/CreateNewUsers";
 
 
-function CreateProduct() {
+function CreateUsers() {
     return (
         <>
             <div className="flex flex-wrap">
                 <div className="w-full lg:w-12/12 px-4">
-                    <CreateNewProduct/>
+                    <CreateNewUsers/>
                 </div>
             </div>
         </>
     );
 }
 
-export default CreateProduct;
+export default CreateUsers;

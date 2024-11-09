@@ -18,6 +18,7 @@ import CreateProduct from "../views/admin/Product/NewProduct";
 import EditProductView from "../views/admin/Product/EditProduct";
 import Order from "../views/admin/Orders/Order";
 import Users from "../views/admin/Users/Users";
+import CreateUsers from "../views/admin/Users/NewUsers";
 
 
 export default function Admin() {
@@ -36,6 +37,7 @@ export default function Admin() {
             <Route path="/products/edit/:productId" element={<EditProductView />} />
             <Route path="/orders" element={<Order/>} />
             <Route path="/users" element={<Users/>} />
+            <Route path="/users/create" element={<CreateUsers/>}/>
           </Routes>
         </div>
         <FooterAdmin />
