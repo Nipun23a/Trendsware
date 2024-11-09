@@ -17,6 +17,8 @@ import Product from "../views/admin/Product/Product";
 import CreateProduct from "../views/admin/Product/NewProduct";
 import EditProductView from "../views/admin/Product/EditProduct";
 import Order from "../views/admin/Orders/Order";
+import Users from "../views/admin/Users/Users";
+
 
 export default function Admin() {
   return (
@@ -33,7 +35,7 @@ export default function Admin() {
             <Route path="/products/create" element={<CreateProduct/>}/>
             <Route path="/products/edit/:productId" element={<EditProductView />} />
             <Route path="/orders" element={<Order/>} />
-            <Route path="/tables" exact component={Tables} />
+            <Route path="/users" element={<Users/>} />
           </Routes>
         </div>
         <FooterAdmin />

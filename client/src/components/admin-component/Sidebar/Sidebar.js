@@ -158,11 +158,11 @@ export default function Sidebar() {
                 <Link
                     className={
                         "text-sm uppercase py-3 font-bold block " +
-                        (window.location.href.indexOf("/admin/tables") !== -1
+                        (window.location.href.indexOf("/admin/users") !== -1
                             ? "text-lightBlue-500 hover:text-lightBlue-600"
                             : "text-blueGray-700 hover:text-blueGray-500")
                     }
-                    to="/admin/orders"
+                    to="/admin/users"
                 >
                   <i
                       className={
@@ -183,7 +183,7 @@ export default function Sidebar() {
                             ? "text-lightBlue-500 hover:text-lightBlue-600"
                             : "text-blueGray-700 hover:text-blueGray-500")
                     }
-                    to="/admin/orders"
+                    to="/admin/profile"
                 >
                   <i
                       className={
