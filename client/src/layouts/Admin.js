@@ -38,10 +38,12 @@ export default function Admin() {
             <Route path="/orders" element={<Order/>} />
             <Route path="/users" element={<Users/>} />
             <Route path="/users/create" element={<CreateUsers/>}/>
+            <Route path="/profile" element={<Settings/>}/>
           </Routes>
         </div>
-        <FooterAdmin />
+
       </div>
+      <FooterAdmin />
     </div>
   );
 }
