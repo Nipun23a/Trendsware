@@ -1,33 +1,89 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from "../Modal/Modal";
 
 const CardAllProduct = () => {
     const navigate = useNavigate();
-
-    const [showModal,setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const products = [
-        { id: 1, name: 'Product A',sku: 'SKU0123456789', quantity: 4569, getPrice: 46.53, sellPrice: 50.87,description:"This is Product A Description" },
-        { id: 2, name: 'Product B',sku: 'SKU0123456789', quantity: 3985, getPrice: 46.53, sellPrice: 46.53,description:"This is Product B Description" },
-        { id: 3, name: 'Product C',sku: 'SKU0123456789', quantity: 3513, getPrice: 36.49, sellPrice: 50.87,description:"This is Product C Description" },
-        { id: 4, name: 'Product D',sku: 'SKU0123456789', quantity: 2050, getPrice: 46.53, sellPrice: 46.53,description:"This is Product D Description" },
-        { id: 5, name: 'Product E',sku: 'SKU0123456789', quantity: 1795, getPrice: 46.53, sellPrice: 46.53,description:"This is Product E Description" },
-    ];
+    const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const fetchProducts = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch('http://localhost:5000/api/products/'); // Replace with your actual API endpoint
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            // Check if data exists and is an array
+            if (data && Array.isArray(data)) {
+                setProducts(data);
+            } else {
+                throw new Error('Invalid data format received');
+            }
+            setError(null);
+        } catch (err) {
+            console.error('Fetch error:', err);
+            setError('Error loading products: ' + err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleEditClick = (product) => {
-        navigate(`/admin/products/edit/${product.id}}`,{state: {product}});
+        navigate(`/admin/products/edit/${product._id}`, { state: { product } });
     };
 
-    const handleDeactivateClick = (product) => {
-      setSelectedProduct(product);
-      setShowModal(true);
+    const handleStatusClick = (product) => {
+        setSelectedProduct(product);
+        setShowModal(true);
     };
 
-    const handleConfirmDeactivate = () => {
-        console.log(`Product ${selectedProduct.name} deactivated`);
-        setShowModal(false);
-        setSelectedProduct(null);
+    const handleConfirmStatusChange = async () => {
+        try {
+            const endpoint = selectedProduct.is_active
+                ? `deactivate`
+                : `activate`;
+            const response = await fetch(`http://localhost:5000/api/products/${selectedProduct._id}/${endpoint}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to ${selectedProduct.is_active ? 'deactivate' : 'activate'} product`);
+            }
+
+            await fetchProducts();
+            setShowModal(false);
+            setSelectedProduct(null);
+        } catch (err) {
+            setError('Error updating product status: ' + err.message);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded p-4">
+                <div className="text-center">Loading products...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded p-4">
+                <div className="text-center text-red-500">{error}</div>
+            </div>
+        );
     }
 
     return (
@@ -51,12 +107,11 @@ const CardAllProduct = () => {
                     </div>
                 </div>
                 <div className="block w-full overflow-x-auto">
-                    {/* Projects table */}
                     <table className="items-center w-full bg-transparent border-collapse">
                         <thead>
                         <tr>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                ID
+                                Image
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Name
@@ -74,21 +129,39 @@ const CardAllProduct = () => {
                                 Sell Price
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-
+                                Actions
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         {products.map((product) => (
-                            <tr key={product.id}>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {product.id}
+                            <tr key={product._id}>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                    <div className="flex items-center">
+                                        <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
+                                            {product.imageUrl ? (
+                                                <img
+                                                    src={product.imageUrl}
+                                                    alt={product.productName}
+                                                    className="h-full w-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.src = '/placeholder-image.png';
+                                                        e.target.onerror = null;
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div className="h-full w-full flex items-center justify-center bg-gray-200 text-gray-400">
+                                                    No img
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                    {product.name}
+                                    {product.productName}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                    {product.sku}
+                                    {product.productSKU}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                     {product.quantity}
@@ -101,17 +174,18 @@ const CardAllProduct = () => {
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
                                     <button
-                                        key={product.id}
                                         className="bg-yellow-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         onClick={() => handleEditClick(product)}
                                     >
                                         Edit
                                     </button>
                                     <button
-                                        className="bg-red-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                        onClick={() => handleDeactivateClick(product)}
+                                        className={`${
+                                            product.is_active ? 'bg-red-500' : 'bg-green-500'
+                                        } text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
+                                        onClick={() => handleStatusClick(product)}
                                     >
-                                        Deactivate
+                                        {product.is_active ? 'Deactivate' : 'Activate'}
                                     </button>
                                 </td>
                             </tr>
@@ -122,10 +196,10 @@ const CardAllProduct = () => {
             </div>
             {showModal && (
                 <Modal
-                    title="Deactivate Product"
-                    message={`Are you sure you want to deactivate ${selectedProduct.name}?`}
-                    onConfirm={handleConfirmDeactivate}
-                    onClose={() => setShowModal(false)}
+                    title={selectedProduct.is_active ? "Deactivate Product" : "Activate Product"}
+                    message={`Are you sure you want to ${selectedProduct.is_active ? "deactivate" : "activate"} ${selectedProduct.productName}?`}
+                    onConfirm={handleConfirmStatusChange}
+                    onCancel={() => setShowModal(false)}
                 />
             )}
         </>
