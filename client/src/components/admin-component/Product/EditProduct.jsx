@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams,useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebase";
 import axios from "axios";
@@ -11,6 +11,7 @@ const EditProduct = ({ product }) => {
 
     const location = useLocation();
     const { productId } = useParams();
+    const navigate = useNavigate();
     const [productData, setProductData] = useState({
         productName: "",
         productSKU: "",
@@ -89,6 +90,7 @@ const EditProduct = ({ product }) => {
         try {
             const response = await axios.put(`http://localhost:5000/api/products/${productId}`, updatedProductData);
             console.log("Product updated successfully:", response.data);
+            navigate(`/admin/products`);
         } catch (error) {
             console.log('API error details', error);
         }
