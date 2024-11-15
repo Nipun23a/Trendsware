@@ -38,7 +38,7 @@ const CardAllUsers = () => {
     };
 
     const handleEditClick = (user) => {
-        navigate(`/admin/users/edit/${user.id}`, { state: { user } });
+        navigate(`/admin/users/edit/${user._id}`, { state: { user } });
     };
 
     const handleStatusClick = (user) => {
@@ -48,8 +48,9 @@ const CardAllUsers = () => {
 
     const handleConfirmStatusChange = async () => {
         try {
-            const endpoint = selectedUser.isActive ? `deactivate` : `activate`;
-            const response = await fetch(`http://localhost:5000/api/users/${selectedUser.id}/${endpoint}`, {
+
+            const endpoint = selectedUser.is_active ? `deactivate` : `activate`;
+            const response = await fetch(`http://localhost:5000/api/users/${selectedUser._id}/${endpoint}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +58,7 @@ const CardAllUsers = () => {
             });
 
             if (!response.ok) {
-                throw new Error(`Failed to ${selectedUser.isActive ? 'deactivate' : 'activate'} user`);
+                throw new Error(`Failed to ${selectedUser.is_active ? 'deactivate' : 'activate'} user`);
             }
 
             await fetchUsers();
@@ -116,9 +117,29 @@ const CardAllUsers = () => {
                         <tbody>
                         {users.length > 0 ? (
                             users.map((user) => (
-                                <tr key={user.id}>
+                                <tr key={user._id}>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                        <img src={user.image} alt={user.name} className="rounded-full h-10 w-10" />
+                                        <div className="flex items-center">
+                                            <div
+                                                className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
+                                                {user.image_url ? (
+                                                    <img
+                                                        src={user.image_url}
+                                                        alt={user.name}
+                                                        className="h-full w-full object-cover"
+                                                        onError={(e) => {
+                                                            e.target.src = '/placeholder-image.png';
+                                                            e.target.onerror = null;
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        className="h-full w-full flex items-center justify-center bg-gray-200 text-gray-400">
+                                                        No img
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </td>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{user.name}</td>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{user.email}</td>
@@ -132,11 +153,11 @@ const CardAllUsers = () => {
                                         </button>
                                         <button
                                             className={`${
-                                                user.isActive ? 'bg-red-500' : 'bg-green-500'
+                                                user.is_active ? 'bg-red-500' : 'bg-green-500'
                                             } text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150`}
                                             onClick={() => handleStatusClick(user)}
                                         >
-                                            {user.isActive ? 'Deactivate' : 'Activate'}
+                                            {user.is_active ? 'Deactivate' : 'Activate'}
                                         </button>
                                     </td>
                                 </tr>
@@ -154,8 +175,8 @@ const CardAllUsers = () => {
             </div>
             {showModal && (
                 <Modal
-                    title={`${selectedUser.isActive ? 'Deactivate' : 'Activate'} User`}
-                    message={`Are you sure you want to ${selectedUser.isActive ? 'deactivate' : 'activate'} ${selectedUser.name}?`}
+                    title={`${selectedUser.is_active? 'Deactivate' : 'Activate'} User`}
+                    message={`Are you sure you want to ${selectedUser.is_active ? 'deactivate' : 'activate'} ${selectedUser.name}?`}
                     onConfirm={handleConfirmStatusChange}
                     onClose={() => setShowModal(false)}
                 />
