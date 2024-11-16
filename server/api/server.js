@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const {login} = require("./controllers/userController");
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 app.get('/test', (req, res) => {
     res.json({ message: 'Server is working correctly!' });
 });
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);

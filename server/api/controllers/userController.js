@@ -1,6 +1,9 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const Product = require("../models/productModel");
+
+
 
 exports.getUsers = async (req,res) => {
     try {
@@ -14,7 +17,6 @@ exports.getUsers = async (req,res) => {
 
 exports.createUsers = async (req, res) => {
     try {
-        // Destructure all required fields from request body
         const { name, email, password, role, imageUrl } = req.body;
 
         // Validate required fields
@@ -55,17 +57,13 @@ exports.createUsers = async (req, res) => {
             });
         }
 
-        // Hash the password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // Create new user instance
+        // Create new user instance - password will be hashed by the pre-save middleware
         const newUser = new User({
             name: name.trim(),
             email: email.toLowerCase().trim(),
-            password: hashedPassword,
+            password: password, // Don't hash here - let the middleware do it
             role: role,
-            image_url: imageUrl || '' // Make imageUrl optional
+            image_url: imageUrl || ''
         });
 
         // Save the user
@@ -196,6 +194,69 @@ exports.activateUser = async (req,res) => {
             success: false,
             message: 'Error activated user',
             error: error.message
+        });
+    }
+};
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and Password are Required' });
+        }
+
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found. Please check your email.',
+            });
+        }
+
+        if (!user.is_active) {
+            return res.status(403).json({
+                message: 'Your account is inactive. Contact support for assistance.',
+            });
+        }
+
+        const isPasswordValid = await user.comparePassword(password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                message: 'Invalid password. Please try again.',
+            });
+        }
+
+        // Make sure to use process.env.JWT_SECRET
+        if (!process.env.JWT_SECRET) {
+            throw new Error('JWT_SECRET is not defined in environment variables');
+        }
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                role: user.role,
+                email: user.email,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        return res.status(200).json({
+            message: 'Login successful',
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                image_url: user.image_url,
+            },
+        });
+    } catch (error) {
+        console.error('Error During login:', error);
+        return res.status(500).json({
+            message: "Error During Login",
+            error: error.message,
         });
     }
 };

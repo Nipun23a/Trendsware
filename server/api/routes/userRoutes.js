@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getUsers,createUsers,getUserById,updateUsers,deleteUsers, deactivateUser, activateUser} = require('../controllers/userController');
+const {getUsers,createUsers,getUserById,updateUsers,deleteUsers, deactivateUser, activateUser, login} = require('../controllers/userController');
 
 
 router.get('/',getUsers);
@@ -10,5 +10,6 @@ router.put('/:id',updateUsers);
 router.put('/:id/deactivate', deactivateUser);
 router.put('/:id/activate',activateUser);
 router.delete('/:id',deleteUsers);
+router.post('/login',login);
 
 module.exports = router;
