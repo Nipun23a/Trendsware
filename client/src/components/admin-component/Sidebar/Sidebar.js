@@ -1,11 +1,19 @@
 /*eslint-disable*/
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 import NotificationDropdown from "../Dropdowns/NotificationDropdown.js";
 import UserDropdown from "../Dropdowns/UserDropdown.js";
+import AuthService from "../../../services/authService";
 
 export default function Sidebar() {
+
+  const navigate = useNavigate();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    AuthService.logout();
+    navigate("/auth/login");
+  }
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   return (
     <div className = "font-montserrat text-blue-950">
@@ -198,22 +206,11 @@ export default function Sidebar() {
               </li>
               <li className="items-center mb-5">
                 <Link
-                    className={
-                        "text-sm uppercase py-3 font-bold block " +
-                        (window.location.href.indexOf("/admin/maps") !== -1
-                            ? "text-lightBlue-500 hover:text-lightBlue-600"
-                            : "text-blueGray-700 hover:text-blueGray-500")
-                    }
-                    to="/auth/login"
+                    onClick={handleLogout}
+                    className="text-sm uppercase py-3 font-bold block text-blueGray-700 hover:text-blueGray-500"
+                    to="#"
                 >
-                  <i
-                      className={
-                          "fas fa-sign-out-alt mr-2 text-sm " +
-                          (window.location.href.indexOf("/admin/maps") !== -1
-                              ? "opacity-75"
-                              : "text-blueGray-300")
-                      }
-                  ></i>{" "}
+                  <i className="fas fa-sign-out-alt mr-2 text-sm text-blueGray-300"></i>{" "}
                   Sign Out
                 </Link>
               </li>
