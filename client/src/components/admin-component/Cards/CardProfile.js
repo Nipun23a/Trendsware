@@ -1,23 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import AuthService from '../../../services/authService';
-
-// Default profile image if user image is not available
 import defaultProfile from '../../../assets/img/team-2-800x800.jpg';
+import AuthService from "../../../services/authService";
 
 export default function CardProfile() {
   const [user, setUser] = useState({
+    _id: "",
     name: '',
     email: '',
     image_url: '',
     role: '',
-    is_active: true
+    createdAt: null,
+    is_active: true,
+    updatedAt: null
   });
 
   useEffect(() => {
-    const currentUser = AuthService.getCurrentUser();
-    if (currentUser) {
-      setUser(currentUser);
-    }
+    const fetchUserProfile = async () => {
+      try {
+        const currentUser = await AuthService.getCurrentUser();
+        if (currentUser) {
+          // Update the state with the MongoDB data structure
+          setUser({
+            _id: currentUser._id || "",
+            name: currentUser.name || "",
+            email: currentUser.email || "",
+            image_url: currentUser.image_url || "",
+            role: currentUser.role || "",
+            is_active: currentUser.is_active ?? true,
+            createdAt: currentUser.createdAt || null,
+            updatedAt: currentUser.updatedAt || null
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        // Handle error appropriately
+      }
+    };
+
+    fetchUserProfile();
   }, []);
 
   // Function to get role display text
@@ -35,12 +55,18 @@ export default function CardProfile() {
     return user.is_active ? 'text-green-500' : 'text-red-500';
   };
 
+  // Function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString();
+  };
+
   return (
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
         <div className="px-6">
           <div className="flex flex-wrap justify-center">
             <div className="w-full px-4 flex justify-center">
-              <div className="relative w-40 h-40 -mt-16"> {/* Fixed width and height container */}
+              <div className="relative w-40 h-40 -mt-16">
                 <img
                     alt="Profile"
                     src={user.image_url || defaultProfile}
@@ -56,7 +82,7 @@ export default function CardProfile() {
                 />
               </div>
             </div>
-            <div className="w-full px-4 text-center mt-5"> {/* Adjusted margin top */}
+            <div className="w-full px-4 text-center mt-5">
               <div className="flex justify-center py-4 lg:pt-4 pt-8">
                 <div className="mr-4 p-3 text-center">
                 <span className={`text-xl font-bold block uppercase tracking-wide ${getStatusColor()}`}>
@@ -102,7 +128,7 @@ export default function CardProfile() {
 
             <div className="mb-2 text-blueGray-600">
               <i className="fas fa-clock mr-2 text-lg text-blueGray-400"></i>
-              Member since {new Date(user.createdAt).toLocaleDateString()}
+              Member since {formatDate(user.createdAt)}
             </div>
           </div>
 
@@ -117,15 +143,6 @@ export default function CardProfile() {
                     <div className="mb-4 text-lg leading-relaxed text-red-600">
                       Account Currently Inactive
                     </div>
-                )}
-
-                {AuthService.isAdmin() && (
-                    <button
-                        className="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                        onClick={() => {/* Add admin action handler */}}
-                    >
-                      Manage User
-                    </button>
                 )}
               </div>
             </div>
