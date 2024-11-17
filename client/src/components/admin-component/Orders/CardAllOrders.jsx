@@ -1,55 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StatusUpdateModal from "../Modal/StatusUpdateModal";
+import OrderDetailModal from "../Modal/OrderDetailModal";
+import { Loader2, Eye } from 'lucide-react';
+import axios from 'axios';
 
 const CardAllOrders = () => {
     const navigate = useNavigate();
-
-    const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [orders, setOrders] = useState([
-        {
-            id: 1,
-            productInfo: { name: 'Product A', sku: 'SKU0123456789', getPrice: 46.53, sellPrice: 50.87 },
-            quantity: 10,
-            totalPrice: 508.7,
-            status: 'Pending'
-        },
-        {
-            id: 2,
-            productInfo: { name: 'Product B', sku: 'SKU0123456789', getPrice: 46.53, sellPrice: 46.53 },
-            quantity: 5,
-            totalPrice: 232.65,
-            status: 'Shipped'
-        },
-        {
-            id: 3,
-            productInfo: { name: 'Product C', sku: 'SKU0123456789', getPrice: 36.49, sellPrice: 50.87 },
-            quantity: 8,
-            totalPrice: 406.96,
-            status: 'Delivered'
-        },
-    ]);
+    const [orders, setOrders] = useState([]);
 
-    const handleEditClick = (order) => {
-        navigate(`/admin/orders/edit/${order.id}`, { state: { order } });
+    useEffect(() => {
+        fetchOrders();
+    }, []);
+
+    const fetchOrders = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders?populate=user,product.product`);
+            setOrders(response.data);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch orders');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleViewClick = (order) => {
+        setSelectedOrder(order);
+        setShowDetailModal(true);
     };
 
     const handleStatusClick = (order) => {
         setSelectedOrder(order);
-        setShowModal(true);
+        setShowStatusModal(true);
     };
 
-    const handleConfirmStatusUpdate = (newStatus) => {
-        const updatedOrders = orders.map((order) =>
-            order.id === selectedOrder.id
-                ? { ...order, status: newStatus } // Update the status of the selected order
-                : order
-        );
-        setOrders(updatedOrders); // Set the updated orders to reflect the change
-        setShowModal(false);
-        setSelectedOrder(null);
+    const handleConfirmStatusUpdate = async (newStatus) => {
+        try {
+            setLoading(true);
+            await axios.patch(`/api/orders/${selectedOrder._id}/status`, {
+                status: newStatus
+            });
+
+            // Update local state
+            const updatedOrders = orders.map((order) =>
+                order._id === selectedOrder._id
+                    ? { ...order, status: newStatus }
+                    : order
+            );
+            setOrders(updatedOrders);
+            setShowStatusModal(false);
+            setSelectedOrder(null);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to update order status');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const getStatusColor = (status) => {
+        const colors = {
+            'pending': 'bg-yellow-100 text-yellow-800',
+            'completed': 'bg-green-100 text-green-800',
+            'shipped': 'bg-blue-100 text-blue-800',
+            'delivered': 'bg-purple-100 text-purple-800',
+            'cancelled': 'bg-red-100 text-red-800'
+        };
+        return colors[status] || 'bg-gray-100 text-gray-800';
+    };
+
+    if (loading && orders.length === 0) {
+        return (
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
+                <div className="flex items-center justify-center p-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -63,68 +97,113 @@ const CardAllOrders = () => {
                         </div>
                     </div>
                 </div>
+
+                {error && (
+                    <div className="p-4 text-red-500 text-center">
+                        {error}
+                    </div>
+                )}
+
                 <div className="block w-full overflow-x-auto">
                     <table className="items-center w-full bg-transparent border-collapse">
                         <thead>
                         <tr>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                Order ID
+                                Transaction Code
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                Product Information
+                                Customer
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                Quantity
+                                Products
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                Total Price
+                                Total Amount
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                Order Status
+                                Status
                             </th>
                             <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-
+                                Date
+                            </th>
+                            <th className="px-6 bg-gray-50 text-gray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                                Actions
                             </th>
                         </tr>
                         </thead>
                         <tbody>
-                        {orders.map((order) => (
-                            <tr key={order.id}>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {order.id}
-                                </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                    {order.productInfo.name} (SKU: {order.productInfo.sku})
-                                </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                    {order.quantity}
-                                </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                    ${order.totalPrice.toFixed(2)}
-                                </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                    {order.status}
-                                </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                                    <button
-                                        className="bg-blue-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                        onClick={() => handleStatusClick(order)}
-                                    >
-                                        Update Status
-                                    </button>
+                        {orders.length === 0 ? (
+                            <tr>
+                                <td colSpan="7" className="text-center py-8 text-gray-500">
+                                    No orders found
                                 </td>
                             </tr>
-                        ))}
+                        ) : (
+                            orders.map((order) => (
+                                <tr key={order._id}>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                                        {order.transactionCode}
+                                    </td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                        {order.user.name}
+                                    </td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                        {order.product.map((item, index) => (
+                                            <div key={index}>
+                                                {item.product.name} (x{item.quantity})
+                                                {index < order.product.length - 1 && ', '}
+                                            </div>
+                                        ))}
+                                    </td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                        ${order.totalAmount.toFixed(2)}
+                                    </td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                            <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(order.status)}`}>
+                                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                            </span>
+                                    </td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                        {new Date(order.createdAt).toLocaleDateString()}
+                                    </td>
+                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                                        <button
+                                            className="bg-gray-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            onClick={() => handleViewClick(order)}
+                                        >
+                                            <Eye className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            className="bg-blue-500 text-white font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                            onClick={() => handleStatusClick(order)}
+                                        >
+                                            Update Status
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                         </tbody>
                     </table>
                 </div>
             </div>
-            {showModal && (
+
+            {/* Status Update Modal */}
+            {showStatusModal && (
                 <StatusUpdateModal
-                    showModal={showModal} // Ensure showModal is passed correctly
-                    onClose={() => setShowModal(false)}
-                    onConfirm={(newStatus) => handleConfirmStatusUpdate(newStatus)}
-                    productName={selectedOrder.productInfo.name} // Pass the correct product name
+                    showModal={showStatusModal}
+                    onClose={() => setShowStatusModal(false)}
+                    onConfirm={handleConfirmStatusUpdate}
+                    productName={selectedOrder?.product[0]?.product?.name}
+                />
+            )}
+
+            {/* Order Detail Modal */}
+            {showDetailModal && (
+                <OrderDetailModal
+                    showModal={showDetailModal}
+                    onClose={() => setShowDetailModal(false)}
+                    order={selectedOrder}
                 />
             )}
         </>
@@ -132,4 +211,3 @@ const CardAllOrders = () => {
 };
 
 export default CardAllOrders;
-

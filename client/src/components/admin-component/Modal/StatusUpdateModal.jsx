@@ -1,64 +1,65 @@
 import React, { useState } from "react";
 
 const StatusUpdateModal = ({ showModal, onClose, onConfirm, productName }) => {
-    const [status, setStatus] = useState('Pending'); // State to store the selected status
+    const [status, setStatus] = useState('pending');
 
-    // Handle status change
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
     };
 
-    // Function to handle confirm action with status
     const handleConfirm = () => {
-        onConfirm(status); // Pass the selected status back to parent on confirm
+        onConfirm(status);
     };
 
-    if (!showModal) return null; // Hide modal when showModal is false
+    if (!showModal) return null;
 
-    // Prevent modal from closing when clicking inside the modal content
     const handleModalClick = (e) => {
-        e.stopPropagation(); // Prevent event from bubbling up to the background div
+        e.stopPropagation();
     };
 
     return (
         <>
-            {/* Modal Background */}
             <div
                 className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-                onClick={onClose} // Closes modal if background is clicked
+                onClick={onClose}
             >
                 <div
                     className="relative w-auto my-6 mx-auto max-w-3xl"
-                    onClick={handleModalClick} // Prevents the modal from closing when clicking inside
+                    onClick={handleModalClick}
                 >
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                        {/* Header */}
                         <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                            <h3 className="text-3xl font-semibold">Update Status for {productName}</h3>
+                            <h3 className="text-3xl font-semibold">
+                                Update Status for {productName}
+                            </h3>
                             <button
                                 className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                                 onClick={onClose}
                             >
-                                <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">×</span>
+                                <span className="bg-transparent text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                                    ×
+                                </span>
                             </button>
                         </div>
 
-                        {/* Body */}
                         <div className="relative p-6 flex-auto">
-                            <label htmlFor="status" className="block text-sm font-medium text-gray-700">Update Status:</label>
+                            <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+                                Update Status:
+                            </label>
                             <select
                                 id="status"
                                 value={status}
                                 onChange={handleStatusChange}
                                 className="mt-2 p-2 border border-gray-300 rounded w-full font-montserrat"
                             >
-                                <option value="Pending">Pending</option>
-                                <option value="On Arrival">On Arrival</option>
-                                <option value="Order Finished">Delivered</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
                             </select>
                         </div>
 
-                        {/* Footer */}
                         <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                             <button
                                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
@@ -78,11 +79,9 @@ const StatusUpdateModal = ({ showModal, onClose, onConfirm, productName }) => {
                     </div>
                 </div>
             </div>
-            {/* Modal background */}
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
         </>
     );
 };
 
 export default StatusUpdateModal;
-
