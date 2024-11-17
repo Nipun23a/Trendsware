@@ -44,7 +44,7 @@ const CardAllOrders = () => {
     const handleConfirmStatusUpdate = async (newStatus) => {
         try {
             setLoading(true);
-            await axios.patch(`/api/orders/${selectedOrder._id}/status`, {
+            await axios.patch(`${process.env.REACT_APP_API_URL}/orders/${selectedOrder._id}/status`, {
                 status: newStatus
             });
 
