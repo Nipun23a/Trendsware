@@ -260,3 +260,91 @@ exports.login = async (req, res) => {
         });
     }
 };
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const { name, email, image_url, password, new_password, is_active, userId } = req.body;
+
+        // Debug input data
+        console.log('Request body:', req.body);
+
+        if (!userId) {
+            console.log('Error: Missing userId in request body');
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        const user = await User.findById(userId);
+
+        // Debug user lookup
+        if (!user) {
+            console.log(`User not found with ID: ${userId}`);
+            return res.status(404).json({ message: 'User not found' });
+        }
+        console.log('User found:', user);
+
+        // Update basic fields if provided
+        if (name) {
+            console.log(`Updating name: ${name}`);
+            user.name = name;
+        }
+        if (email) {
+            console.log(`Updating email: ${email}`);
+            user.email = email;
+        }
+        if (typeof is_active === 'boolean') {
+            console.log(`Updating is_active to: ${is_active}`);
+            user.is_active = is_active;
+        }
+        if (image_url) {
+            console.log(`Updating image_url: ${image_url}`);
+            user.image_url = image_url;
+        }
+
+        // Handle password update
+        if (password && new_password) {
+            console.log('Password update requested');
+            const isPasswordValid = await user.comparePassword(password);
+
+            if (!isPasswordValid) {
+                console.log('Invalid current password provided');
+                return res.status(401).json({
+                    message: 'Invalid password. Please try again.',
+                });
+            }
+
+            if (new_password.length < 6) {
+                console.log('New password is too short');
+                return res.status(400).json({
+                    message: 'New Password must be at least 6 characters long'
+                });
+            }
+
+            console.log('Updating password');
+            user.password = new_password;
+        }
+
+        // Save the updated user
+        await user.save();
+        console.log('User updated successfully:', user);
+
+        const userResponse = {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            image_url: user.image_url,
+            is_active: user.is_active,
+            role: user.role
+        };
+
+        return res.status(200).json({
+            message: 'Profile updated successfully',
+            user: userResponse
+        });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        return res.status(500).json({
+            message: 'Error updating profile',
+            error: error.message
+        });
+    }
+};
