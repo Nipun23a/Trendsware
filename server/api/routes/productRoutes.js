@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {getProducts,createProducts,updateProducts,deleteProducts, getProductById, deactivateProduct, activateProduct} = require('../controllers/productController');
+const {getProducts,createProducts,updateProducts,deleteProducts, getProductById, deactivateProduct, activateProduct,
+    getNewArrivals
+} = require('../controllers/productController');
 
-
+router.get('/new-arrivals',getNewArrivals);
 router.get('/',getProducts);
 router.get('/:id',getProductById);
 router.post('/',createProducts);

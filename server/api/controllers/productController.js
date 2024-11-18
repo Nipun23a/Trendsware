@@ -1,8 +1,16 @@
 const Product = require('../models/productModel');
 
-exports.getProducts = async (req,res) => {
+exports.getProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        const { category, sortBy } = req.query;
+        const query = category && category !== 'all' ? { category } : {};
+        const sortOptions = {
+            popularity: { popularity: -1 },
+            date: { createdAt: -1 },
+            'price-low': { price: 1 },
+            'price-high': { price: -1 },
+        };
+        const products = await Product.find(query).sort(sortOptions[sortBy] || {});
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching products', error: error.message });
@@ -172,3 +180,20 @@ exports.activateProduct = async (req,res) => {
     }
 };
 
+exports.getNewArrivals = async (req, res) => {
+    try {
+        // Get products from the last 30 days, limit to 8 items
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const newProducts = await Product.find({
+            createdAt: { $gte: thirtyDaysAgo }
+        })
+            .sort({ createdAt: -1 })
+            .limit(8);
+
+        res.json(newProducts);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching new arrivals', error: error.message });
+    }
+};
