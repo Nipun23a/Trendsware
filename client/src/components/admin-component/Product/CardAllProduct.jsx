@@ -17,7 +17,7 @@ const CardAllProduct = () => {
     const fetchProducts = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch('http://localhost:5000/api/products/'); // Replace with your actual API endpoint
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/products/`); // Replace with your actual API endpoint
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -138,19 +138,21 @@ const CardAllProduct = () => {
                             <tr key={product._id}>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                     <div className="flex items-center">
-                                        <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
+                                        <div
+                                            className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
                                             {product.imageUrl ? (
                                                 <img
                                                     src={product.imageUrl}
                                                     alt={product.productName}
-                                                    className="h-full w-full object-cover"
+                                                    className="h-full w-full object-contain"
                                                     onError={(e) => {
                                                         e.target.src = '/placeholder-image.png';
                                                         e.target.onerror = null;
                                                     }}
                                                 />
                                             ) : (
-                                                <div className="h-full w-full flex items-center justify-center bg-gray-200 text-gray-400">
+                                                <div
+                                                    className="h-full w-full flex items-center justify-center bg-gray-200 text-gray-400">
                                                     No img
                                                 </div>
                                             )}
