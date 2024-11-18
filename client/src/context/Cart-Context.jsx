@@ -8,26 +8,28 @@ export const CartProvider = ({children}) => {
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     const addToCart = (product, size, quantity = 1) => {
-        setCartItems(prevItems => {
-            // Check if item already exists with same size
-            const existingItemIndex = prevItems.findIndex(
-                item => item.id === product.id && item.size === size
-            );
+        const existingItemIndex = cartItems.findIndex(
+            item => item.id === product._id && item.size === size
+        );
 
-            if (existingItemIndex > -1) {
-                // Update quantity of existing item
-                const newItems = [...prevItems];
-                newItems[existingItemIndex].quantity += quantity;
-                return newItems;
-            }
-
-            // Add new item
-            return [...prevItems, {
-                ...product,
-                size,
-                quantity,
-            }];
-        });
+        if (existingItemIndex > -1) {
+            // Update quantity if item already exists
+            const updatedCartItems = [...cartItems];
+            updatedCartItems[existingItemIndex].quantity += 1;
+            setCartItems(updatedCartItems);
+        } else {
+            // Add new item to cart
+            const newCartItem = {
+                id: product._id,
+                name: product.productName,
+                price: product.sellPrice,
+                size: size,
+                quantity: 1,
+                image: product.imageUrl, // Make sure this matches your product schema
+                // Add any other relevant details
+            };
+            setCartItems([...cartItems, newCartItem]);
+        }
         setIsCartOpen(true);
     };
 
