@@ -21,7 +21,10 @@ const MainLayout = () => {
                     <Route path = "/" element={<Home />} />
                     <Route path = "/about" element={<About />} />
                     <Route path = "/product" element = {<Product/>}/>
-                    <Route path = "/single-product" element={<SingleProductContainer/>}/>
+                    <Route
+                        path="/single-product/:id"
+                        element={<SingleProductContainer />}
+                    />
                     <Route path = "/contact" element = {<Contact/>}/>
                     <Route path = "/cart" element={<CartPage/>}/>
                     <Route path= "/payment" element={<CheckoutPage/>}/>
