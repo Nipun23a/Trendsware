@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
-    user : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'User',
-        required : true
-    },
     product : [{
         product : {
             type : mongoose.Schema.Types.ObjectId,
@@ -26,6 +21,11 @@ const OrderSchema = new mongoose.Schema({
     totalAmount : {
         type: Number,
         required: true
+    },
+    customer : {
+        firstName:String,
+        lastName:String,
+        telephone:String,
     },
     shippingAddress : {
         addressLine1: String,

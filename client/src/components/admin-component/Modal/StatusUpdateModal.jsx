@@ -53,7 +53,6 @@ const StatusUpdateModal = ({ showModal, onClose, onConfirm, productName }) => {
                                 className="mt-2 p-2 border border-gray-300 rounded w-full font-montserrat"
                             >
                                 <option value="pending">Pending</option>
-                                <option value="completed">Completed</option>
                                 <option value="shipped">Shipped</option>
                                 <option value="delivered">Delivered</option>
                                 <option value="cancelled">Cancelled</option>

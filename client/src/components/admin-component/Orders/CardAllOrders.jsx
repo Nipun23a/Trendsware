@@ -5,6 +5,7 @@ import OrderDetailModal from "../Modal/OrderDetailModal";
 import { Loader2, Eye } from 'lucide-react';
 import axios from 'axios';
 
+
 const CardAllOrders = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -13,16 +14,51 @@ const CardAllOrders = () => {
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [orders, setOrders] = useState([]);
+    const [ordersWithProducts, setOrdersWithProducts] = useState([]);
 
     useEffect(() => {
         fetchOrders();
     }, []);
 
+    useEffect(() => {
+        const fetchProductNames = async () => {
+            const ordersWithProductDetails = await Promise.all(
+                orders.map(async (order) => {
+                    const productsWithNames = await Promise.all(
+                        order.product.map(async (item) => {
+                            try {
+                                const productResponse = await axios.get(
+                                    `${process.env.REACT_APP_API_URL}/products/${item.product}`
+                                );
+                                return {
+                                    ...item,
+                                    productName: productResponse.data.productName
+                                };
+                            } catch (error) {
+                                console.error('Error fetching product:', error);
+                                return {
+                                    ...item,
+                                    productName: 'Unknown Product'
+                                };
+                            }
+                        })
+                    );
+                    return { ...order, product: productsWithNames };
+                })
+            );
+            setOrdersWithProducts(ordersWithProductDetails);
+        };
+
+        if (orders.length > 0) {
+            fetchProductNames();
+        }
+    }, [orders]);
+
     const fetchOrders = async () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders?populate=user,product.product`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/orders/`);
             setOrders(response.data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch orders');
@@ -139,18 +175,18 @@ const CardAllOrders = () => {
                                 </td>
                             </tr>
                         ) : (
-                            orders.map((order) => (
+                            (ordersWithProducts.length > 0 ? ordersWithProducts : orders).map((order) =>  (
                                 <tr key={order._id}>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
                                         {order.transactionCode}
                                     </td>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                        {order.user.name}
+                                        {order.customer.firstName + " " + order.customer.lastName}
                                     </td>
                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                                         {order.product.map((item, index) => (
                                             <div key={index}>
-                                                {item.product.name} (x{item.quantity})
+                                                {item.productName} (x{item.quantity})
                                                 {index < order.product.length - 1 && ', '}
                                             </div>
                                         ))}

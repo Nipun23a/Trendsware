@@ -1,5 +1,6 @@
 const Order = require('../models/orderModel');
 
+
 const validateOrderStatus = (req, res, next) => {
     const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
     if (!validStatuses.includes(req.body.status)) {
@@ -84,7 +85,7 @@ exports.updateOrderStatus = async (req, res) => {
         const { status } = req.body;
 
         // Validate status before updating
-        const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+        const validStatuses = ['pending','processing', 'shipped', 'delivered', 'cancelled'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({
                 message: 'Invalid order status'
@@ -115,5 +116,6 @@ exports.updateOrderStatus = async (req, res) => {
         });
     }
 };
+
 
 module.exports = exports;

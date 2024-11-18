@@ -19,10 +19,12 @@ const CheckoutForm = () => {
     const [customerInfo, setCustomerInfo] = useState({
         firstName: '',
         lastName: '',
-        address: '',
-        city: '',
-        postalCode: '',
         telephone: '',
+        shippingAddress: {
+            addressLine1: '',
+            city: '',
+            postalCode: '',
+        }
     });
 
     // Payment Information State
@@ -34,10 +36,22 @@ const CheckoutForm = () => {
     });
 
     const handleCustomerInfoChange = (e) => {
-        setCustomerInfo({
-            ...customerInfo,
-            [e.target.name]: e.target.value
-        });
+        const { name, value } = e.target;
+        if (name.startsWith('shippingAddress.')) {
+            const addressField = name.split('.')[1];
+            setCustomerInfo(prev => ({
+                ...prev,
+                shippingAddress: {
+                    ...prev.shippingAddress,
+                    [addressField]: value
+                }
+            }));
+        } else {
+            setCustomerInfo(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
     };
 
     const handlePaymentInfoChange = (e) => {
@@ -71,8 +85,11 @@ const CheckoutForm = () => {
         }
 
         // Validate customer information
-        const requiredFields = ['firstName', 'lastName', 'address', 'city', 'postalCode', 'telephone'];
-        const missingFields = requiredFields.filter(field => !customerInfo[field]);
+        const requiredFields = ['firstName', 'lastName', 'telephone', 'shippingAddress.addressLine1', 'shippingAddress.city', 'shippingAddress.postalCode'];
+        const missingFields = requiredFields.filter(field => {
+            const [obj, prop] = field.split('.');
+            return !prop ? !customerInfo[obj] : !customerInfo[obj][prop];
+        });
 
         if (missingFields.length > 0) {
             setError('Please fill in all required fields');
@@ -81,7 +98,8 @@ const CheckoutForm = () => {
         }
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/create-payment`, {
+            // First, create Stripe payment
+            const paymentResponse = await fetch(`${process.env.REACT_APP_API_URL}/create-payment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,15 +111,49 @@ const CheckoutForm = () => {
                 }),
             });
 
-            const data = await response.json();
+            const paymentData = await paymentResponse.json();
 
-            if (data.error) {
-                setError(data.error);
-            } else {
-                window.location.href = '/success';
+            if (paymentData.error) {
+                setError(paymentData.error);
+                setProcessing(false);
+                return;
             }
+
+            // If payment is successful, create order
+            const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/orders/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product: cartItems.map(item => ({
+                        product: item.id,
+                        quantity: item.quantity
+                    })),
+                    transactionCode: paymentData.paymentIntentId,
+                    totalAmount: cartTotal,
+                    customer: {
+                        firstName: customerInfo.firstName,
+                        lastName: customerInfo.lastName,
+                        telephone: customerInfo.telephone
+                    },
+                    shippingAddress: customerInfo.shippingAddress,
+                    status: 'pending'
+                }),
+            });
+
+            const orderData = await orderResponse.json();
+
+            if (orderData.error) {
+                setError(orderData.error);
+                setProcessing(false);
+                return;
+            }
+
+            // Redirect to success page
+            window.location.href = '/success';
         } catch (err) {
-            setError('Payment failed. Please try again.');
+            setError('Order processing failed. Please try again.');
         }
         setProcessing(false);
     };
@@ -155,8 +207,8 @@ const CheckoutForm = () => {
                                     </label>
                                     <input
                                         type="text"
-                                        name="address"
-                                        value={customerInfo.address}
+                                        name="shippingAddress.addressLine1"
+                                        value={customerInfo.shippingAddress.addressLine1}
                                         onChange={handleCustomerInfoChange}
                                         className="w-full p-2 border rounded-md"
                                         required
@@ -170,8 +222,8 @@ const CheckoutForm = () => {
                                         </label>
                                         <input
                                             type="text"
-                                            name="city"
-                                            value={customerInfo.city}
+                                            name="shippingAddress.city"
+                                            value={customerInfo.shippingAddress.city}
                                             onChange={handleCustomerInfoChange}
                                             className="w-full p-2 border rounded-md"
                                             required
@@ -183,8 +235,8 @@ const CheckoutForm = () => {
                                         </label>
                                         <input
                                             type="text"
-                                            name="postalCode"
-                                            value={customerInfo.postalCode}
+                                            name="shippingAddress.postalCode"
+                                            value={customerInfo.shippingAddress.postalCode}
                                             onChange={handleCustomerInfoChange}
                                             className="w-full p-2 border rounded-md"
                                             required
@@ -312,7 +364,8 @@ const CheckoutForm = () => {
                                                         >
                                                             <Minus className="w-4 h-4"/>
                                                         </button>
-                                                        <span className="w-8 text-center font-montserrat">{item.quantity}</span>
+                                                        <span
+                                                            className="w-8 text-center font-montserrat">{item.quantity}</span>
                                                         <button
                                                             type="button"
                                                             onClick={() => handleQuantityUpdate(item.id, item.size, item.quantity + 1)}
@@ -375,7 +428,8 @@ const CheckoutForm = () => {
                                 )}
                             </button>
 
-                            <div className="mt-4 flex items-center justify-center text-sm text-gray-500 font-montserrat">
+                            <div
+                                className="mt-4 flex items-center justify-center text-sm text-gray-500 font-montserrat">
                                 <ShoppingCart className="w-4 h-4 mr-1"/>
                                 <span>Secure payment powered by Stripe</span>
                             </div>
