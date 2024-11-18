@@ -1,42 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown, Check } from 'lucide-react';
 import ItemContainer from '../common/common-user/Item-Container';
+import axios from 'axios';
 
 const AllProductContainer = () => {
-    const products = Array(16).fill({
-        id: 1,
-        name: "Polo-TShirt",
-        category: "Men's Wear",
-        price: 99.99,
-        date: "2024-03-15",
-        popularity: 4.5
-    });
-
+    const [products, setProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedFilter, setSelectedFilter] = useState('all');
     const [sortBy, setSortBy] = useState('popularity');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isSortOpen, setIsSortOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const itemsPerPage = 8;
-    const totalPages = Math.ceil(products.length / itemsPerPage);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`);
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const filteredProducts = products.filter((product) =>
+        selectedFilter === 'all' || product.category === selectedFilter
+    );
+
+    const sortedProducts = [...filteredProducts].sort((a, b) => {
+        if (sortBy === 'popularity') return b.popularity - a.popularity;
+        if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
+        if (sortBy === 'price-low') return a.price - b.price;
+        if (sortBy === 'price-high') return b.price - a.price;
+        return 0;
+    });
+
+    const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-
-    const displayedProducts = products.slice(startIndex, endIndex);
+    const displayedProducts = sortedProducts.slice(startIndex, endIndex);
 
     const categoryOptions = [
         { value: 'all', label: 'All Categories' },
         { value: 'mens', label: "Men's Wear" },
         { value: 'womens', label: "Women's Wear" },
-        { value: 'kids', label: "Kid's Wear" }
+        { value: 'kids', label: "Kid's Wear" },
     ];
 
     const sortOptions = [
         { value: 'popularity', label: 'Sort by Popularity' },
         { value: 'date', label: 'Sort by Date Added' },
         { value: 'price-low', label: 'Price: Low to High' },
-        { value: 'price-high', label: 'Price: High to Low' }
+        { value: 'price-high', label: 'Price: High to Low' },
     ];
 
     return (
@@ -48,8 +70,10 @@ const AllProductContainer = () => {
                     value={selectedFilter}
                     onChange={(e) => setSelectedFilter(e.target.value)}
                 >
-                    {categoryOptions.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
+                    {categoryOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
                     ))}
                 </select>
 
@@ -58,8 +82,10 @@ const AllProductContainer = () => {
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                 >
-                    {sortOptions.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
+                    {sortOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -79,18 +105,18 @@ const AllProductContainer = () => {
                                  transition-all duration-300 group"
                     >
                         <span className="truncate">
-                            {categoryOptions.find(opt => opt.value === selectedFilter)?.label}
+                            {categoryOptions.find((opt) => opt.value === selectedFilter)?.label}
                         </span>
                         <ChevronDown
                             size={18}
-                            className={`transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''} 
-                                      group-hover:text-blue-950`}
+                            className={`transition-transform duration-300 ${
+                                isFilterOpen ? 'rotate-180' : ''
+                            } group-hover:text-blue-950`}
                         />
                     </button>
 
                     {isFilterOpen && (
-                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border border-gray-200
-                                      shadow-lg py-2">
+                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border border-gray-200 shadow-lg py-2">
                             {categoryOptions.map((option) => (
                                 <button
                                     key={option.value}
@@ -125,18 +151,18 @@ const AllProductContainer = () => {
                                  transition-all duration-300 group"
                     >
                         <span className="truncate">
-                            {sortOptions.find(opt => opt.value === sortBy)?.label}
+                            {sortOptions.find((opt) => opt.value === sortBy)?.label}
                         </span>
                         <ChevronDown
                             size={18}
-                            className={`transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''} 
-                                      group-hover:text-blue-950`}
+                            className={`transition-transform duration-300 ${
+                                isSortOpen ? 'rotate-180' : ''
+                            } group-hover:text-blue-950`}
                         />
                     </button>
 
                     {isSortOpen && (
-                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border border-gray-200
-                                      shadow-lg py-2">
+                        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border border-gray-200 shadow-lg py-2">
                             {sortOptions.map((option) => (
                                 <button
                                     key={option.value}
@@ -160,18 +186,24 @@ const AllProductContainer = () => {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-15 mt-10 sm:mt-20">
-                {displayedProducts.map((product, index) => (
-                    <div key={index} className="flex justify-center">
-                        <ItemContainer />
-                    </div>
-                ))}
-            </div>
+            {loading ? (
+                <div className="flex justify-center items-center h-[300px]">
+                    <p className="text-blue-950">Loading...</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-15 mt-10 sm:mt-20">
+                    {displayedProducts.map((product, index) => (
+                        <div key={index} className="flex justify-center">
+                            <ItemContainer product={product} />
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* Pagination */}
             <div className="flex justify-center items-center gap-2 mt-12">
                 <button
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
                     className="p-2 rounded-full border border-gray-300 disabled:opacity-50 hover:bg-gray-100 transition-colors"
                 >
@@ -179,7 +211,7 @@ const AllProductContainer = () => {
                 </button>
 
                 <div className="flex gap-2">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                         <button
                             key={page}
                             onClick={() => setCurrentPage(page)}
@@ -195,7 +227,7 @@ const AllProductContainer = () => {
                 </div>
 
                 <button
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
                     className="p-2 rounded-full border border-gray-300 disabled:opacity-50 hover:bg-gray-100 transition-colors"
                 >
@@ -204,6 +236,6 @@ const AllProductContainer = () => {
             </div>
         </div>
     );
-}
+};
 
 export default AllProductContainer;
