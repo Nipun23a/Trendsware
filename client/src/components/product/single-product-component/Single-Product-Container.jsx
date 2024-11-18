@@ -1,29 +1,46 @@
-import React, {useContext, useState} from 'react';
-import { ShoppingCart, Heart } from 'lucide-react';
-import ItemImage from "../../../assets/images/products/tshirt.png";
-import AltImage1 from "../../../assets/images/products/tshirt.png";
-import AltImage2 from "../../../assets/images/products/tshirt.png";
-import {CartContext} from "../../../context/Cart-Context";
+import React, { useContext, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { ShoppingCart, Heart} from 'lucide-react';
+import { X, SearchCode} from 'lucide-react';
+import { CartContext } from "../../../context/Cart-Context";
 
 const SingleProductContainer = () => {
+    const { id } = useParams();
     const { addToCart } = useContext(CartContext);
+    const [product, setProduct] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
-    const [mainImage, setMainImage] = useState(ItemImage);
+    const [mainImage, setMainImage] = useState('');
+    const [secondaryImages, setSecondaryImages] = useState([]);
     const [isImageChanging, setIsImageChanging] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [fullImageView, setFullImageView] = useState(false);
+    const [magnifierPosition, setMagnifierPosition] = useState({ x: 0, y: 0 });
 
-    const product = {
-        name: "Premium Leather Jacket",
-        price: 299.99,
-        description: "Crafted from genuine leather, this classic jacket features a timeless design with modern details. The perfect blend of style and durability, it's designed to last for years while maintaining its sophisticated appeal.",
-        sizes: ["XS", "S", "M", "L", "XL"],
-        features: [
-            "100% Genuine Leather",
-            "Quilted Interior Lining",
-            "YKK Premium Zippers",
-            "Multiple Interior Pockets"
-        ],
-        images: [ItemImage, AltImage1, AltImage2]
-    };
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/products/${id}`);
+                setProduct(response.data);
+
+                // Set main image
+                setMainImage(response.data.imageUrl);
+
+                // Prepare secondary images
+                const otherImages = response.data.secondaryImages || [];
+                const images = [response.data.imageUrl, ...otherImages].slice(0, 3);
+                setSecondaryImages(images);
+
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchProduct();
+    }, [id]);
 
     const handleImageClick = (image) => {
         setIsImageChanging(true);
@@ -34,58 +51,120 @@ const SingleProductContainer = () => {
     };
 
     const handleAddToCart = () => {
-        if (selectedSize) {
+        if (selectedSize && product) {
             addToCart(product, selectedSize);
         }
     };
+
+    const handleFullImageView = () => {
+        setFullImageView(!fullImageView);
+    };
+
+    const handleMouseMove = (e) => {
+        const rect = e.target.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width * 100;
+        const y = (e.clientY - rect.top) / rect.height * 100;
+        setMagnifierPosition({ x, y });
+    };
+
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!product) return <div>Product not found</div>;
 
     return (
         <div className="max-w-7xl mx-auto p-6 md:p-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Left side - Product Image */}
                 <div className="relative group">
-                    <div className="aspect-square rounded-xl bg-gray-100 overflow-hidden">
+                    <div
+                        className="aspect-square rounded-xl bg-gray-100 overflow-hidden relative"
+                        onClick={handleFullImageView}
+                        style={{cursor: 'pointer'}}
+                    >
                         <img
                             src={mainImage}
                             alt="Product"
-                            className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 
-                                ${isImageChanging ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+                            className="w-full h-full object-cover"
                         />
+                        <div className="absolute top-2 right-2 bg-white/50 rounded-full p-1">
+                            <SearchCode className="w-5 h-5"/>
+                        </div>
                     </div>
+                    {fullImageView && (
+                        <div
+                            className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center"
+                            onClick={handleFullImageView}
+                        >
+                            <div
+                                className="max-w-[90%] max-h-[90%] relative"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <button
+                                    className="absolute -top-10 right-0 text-white"
+                                    onClick={handleFullImageView}
+                                >
+                                    <X className="w-8 h-8" />
+                                </button>
+                                <div
+                                    className="relative overflow-hidden"
+                                    onMouseMove={handleMouseMove}
+                                >
+                                    <img
+                                        src={mainImage}
+                                        alt="Full Product"
+                                        className="w-full h-full object-contain"
+                                        style={{
+                                            backgroundPosition: `${magnifierPosition.x}% ${magnifierPosition.y}%`,
+                                            transform: 'scale(1.5)',
+                                            transformOrigin: `${magnifierPosition.x}% ${magnifierPosition.y}%`
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <button
                         className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
                         aria-label="Add to wishlist"
                     >
-                        <Heart className="w-5 h-5 text-gray-600" />
+                        <Heart className="w-5 h-5 text-gray-600"/>
                     </button>
 
                     {/* Thumbnails - Product Images */}
                     <div className="flex gap-2 mt-4 justify-center md:justify-start">
-                        {product.images.map((image, index) => (
+                        {secondaryImages.map((image, index) => (
                             <button
                                 key={index}
-                                className={`w-16 h-16 md:w-40 md:h-40  md:gap-4 mr-10 rounded-lg overflow-hidden border transition-colors 
-                                    ${mainImage === image ? 'border-gray-400' : 'border-transparent hover:border-gray-300'}`}
+                                className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border transition-colors 
+                ${mainImage === image ? 'border-gray-400' : 'border-transparent hover:border-gray-300'}`}
                                 onClick={() => handleImageClick(image)}
                             >
                                 <img
                                     src={image}
                                     alt={`Thumbnail ${index + 1}`}
                                     className="w-full h-full object-cover"
+                                    style={{
+                                        objectFit: 'cover', // Ensures thumbnails also cover their containers
+                                        width: '100%',
+                                        height: '100%',
+                                        objectPosition: 'center'
+                                    }}
                                 />
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Right side - Product Info */}
                 <div className="space-y-8 flex flex-col justify-between">
                     <div className="space-y-6">
                         {/* Product Header */}
                         <div>
-                            <h1 className="text-3xl md:text-[48px] font-bold text-blue-950 mb-2 font-raleway">{product.name}</h1>
+                            <h1 className="text-3xl md:text-[48px] font-bold text-blue-950 mb-2 font-raleway">
+                                {product.productName}
+                            </h1>
                             <p className="text-xl md:text-3xl font-semibold text-blue-950 font-raleway">
-                                ${product.price}
+                                ${product.sellPrice.toFixed(2)}
                             </p>
                         </div>
 
@@ -93,12 +172,12 @@ const SingleProductContainer = () => {
                         <div className="space-y-4">
                             <p className="text-md font-light text-gray-700 font-poppins">Select Size</p>
                             <div className="flex gap-2 md:gap-3 flex-wrap">
-                                {product.sizes.map((size) => (
+                                {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
                                     <button
                                         key={size}
                                         onClick={() => setSelectedSize(size)}
                                         className={`w-12 h-12 md:w-14 md:h-14 rounded-lg font-medium transition-colors font-poppins
-                    ${selectedSize === size
+                                            ${selectedSize === size
                                             ? 'bg-blue-950 text-white'
                                             : 'bg-white border border-gray-200 text-blue-950 hover:bg-gray-50'
                                         }`}
@@ -112,7 +191,7 @@ const SingleProductContainer = () => {
                         {/* Add to Cart Button */}
                         <button
                             className={`w-full h-12 md:h-14 rounded-lg flex items-center justify-center gap-2 text-lg font-medium transition-colors font-montserrat
-              ${selectedSize
+                                ${selectedSize
                                 ? 'bg-blue-900 text-white hover:bg-blue-950'
                                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
@@ -132,19 +211,12 @@ const SingleProductContainer = () => {
                         </p>
                     </div>
 
-                    {/* Product Features */}
+                    {/* Product Availability */}
                     <div className="space-y-4">
-                        <h2 className="text-lg md:text-xl font-semibold text-blue-950 font-poppins">Features</h2>
-                        <div className="flex flex-wrap gap-2">
-                            {product.features.map((feature) => (
-                                <span
-                                    key={feature}
-                                    className="inline-flex px-4 py-2 md:px-5 md:py-3 rounded-full text-sm font-light bg-blue-950 text-white font-raleway"
-                                >
-                                    {feature}
-                                </span>
-                            ))}
-                        </div>
+                        <h2 className="text-lg md:text-xl font-semibold text-blue-950 font-poppins">Availability</h2>
+                        <p className={`text-md font-medium ${product.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {product.quantity > 0 ? `In Stock (${product.quantity} available)` : 'Out of Stock'}
+                        </p>
                     </div>
                 </div>
             </div>
