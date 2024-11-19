@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search } from 'lucide-react';
 
-const ProductUpperContainer = () => {
+const ProductUpperContainer = ({ onSearch }) => {
     return (
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 md:py-12 lg:py-14">
             <div className="text-center mb-6 sm:mb-8 lg:mb-10">
@@ -17,6 +17,7 @@ const ProductUpperContainer = () => {
                         <input
                             type="text"
                             placeholder="Search products..."
+                            onChange={(e) => onSearch(e.target.value)}
                             className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pl-10 sm:pl-12 rounded-2xl sm:rounded-3xl
                                      border border-gray-600 focus:outline-none focus:ring-2
                                      focus:ring-blue-950 focus:border-transparent bg-transparent
@@ -30,8 +31,9 @@ const ProductUpperContainer = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProductUpperContainer;
+
 
 
