@@ -7,10 +7,12 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const {login} = require("./controllers/userController");
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 dotenv.config();
 const app = express();
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Middleware
 app.use(cors());

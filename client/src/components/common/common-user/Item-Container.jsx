@@ -21,7 +21,7 @@ const ItemContainer = ({ product }) => {
     };
 
     return (
-        <div className="itemContainer w-[280px] bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="itemContainer w-[280px] bg-white rounded-2xl shadow-2xl overflow-hidden font-montserrat">
             <div className="item-image-container relative group">
                 <img
                     src={product.imageUrl}
