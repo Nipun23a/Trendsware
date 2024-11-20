@@ -88,7 +88,7 @@ const EditProduct = ({ product }) => {
         };
 
         try {
-            const response = await axios.put(`http://localhost:5000/api/products/${productId}`, updatedProductData);
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/products/${productId}`, updatedProductData);
             console.log("Product updated successfully:", response.data);
             navigate(`/admin/products`);
         } catch (error) {

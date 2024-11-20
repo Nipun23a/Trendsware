@@ -168,7 +168,7 @@ const CreateNewUsers = () => {
                 ...userData,
                 password: '***hidden***'
             });
-            const response = await axios.post('http://localhost:5000/api/users/', userData);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);
             console.log("User created successfully:", response.data);
 
             // Reset form

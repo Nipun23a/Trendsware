@@ -156,7 +156,7 @@ const CreateNewProduct = () => {
 
         try {
             console.log('Sending request to API with data:', productData);
-            const response = await axios.post('http://localhost:5000/api/products/', productData);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/products`, productData);
             console.log("Product created successfully:", response.data);
 
             // Reset form

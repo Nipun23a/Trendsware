@@ -18,7 +18,7 @@ const CardAllUsers = () => {
     const fetchUsers = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch('http://localhost:5000/api/users/');
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

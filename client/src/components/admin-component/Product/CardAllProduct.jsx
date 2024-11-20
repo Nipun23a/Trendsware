@@ -51,7 +51,7 @@ const CardAllProduct = () => {
             const endpoint = selectedProduct.is_active
                 ? `deactivate`
                 : `activate`;
-            const response = await fetch(`http://localhost:5000/api/products/${selectedProduct._id}/${endpoint}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/products/${selectedProduct._id}/${endpoint}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
