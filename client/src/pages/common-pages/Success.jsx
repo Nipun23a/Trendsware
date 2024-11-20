@@ -47,7 +47,7 @@ const SuccessPage = () => {
                         {/* Action Buttons */}
                         <div className="space-y-4">
                             <Link
-                                to="/shop"
+                                to="/products"
                                 className="w-full flex items-center justify-center bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors font-montserrat"
                             >
                                 <ArrowLeft className="w-5 h-5 mr-2" />
