@@ -69,7 +69,6 @@ const CreateNewProduct = () => {
 
         try {
             const fileName = `products/${Date.now()}-${file.name}`;
-            console.log('Attempting to upload file to path:', fileName);
 
             const storageRef = ref(storage, fileName);
             const uploadTask = uploadBytesResumable(storageRef, file);
@@ -79,43 +78,24 @@ const CreateNewProduct = () => {
                 (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     setUploadProgress(progress);
-                    console.log('Upload progress:', `${progress.toFixed(2)}%`);
                 },
                 (error) => {
-                    console.error("Upload error details:", {
-                        code: error.code,
-                        message: error.message,
-                        serverResponse: error.serverResponse
-                    });
                     setError('Failed to upload image. Please try again.');
                     setIsUploading(false);
                 },
                 async () => {
                     try {
                         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        console.log('Upload successful! Download URL:', downloadURL);
-                        console.log('Total bytes transferred:', uploadTask.snapshot.bytesTransferred);
-                        console.log('Final upload state:', uploadTask.snapshot.state);
 
                         setImageUrl(downloadURL);
                         setIsUploading(false);
                     } catch (error) {
-                        console.error("Error getting download URL:", {
-                            code: error.code,
-                            message: error.message,
-                            serverResponse: error.serverResponse
-                        });
                         setError('Failed to get image URL. Please try again.');
                         setIsUploading(false);
                     }
                 }
             );
         } catch (error) {
-            console.error("Error initiating upload:", {
-                code: error.code,
-                message: error.message,
-                stack: error.stack
-            });
             setError('Failed to start upload. Please try again.');
             setIsUploading(false);
         }
@@ -124,16 +104,6 @@ const CreateNewProduct = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Debug log - Form submission
-        console.log('Submitting form with data:', {
-            productName,
-            productSKU,
-            quantity,
-            getPrice,
-            sellPrice,
-            description,
-            imageUrl
-        });
 
         if (!validateForm()) return;
         if (isUploading) {
@@ -155,9 +125,7 @@ const CreateNewProduct = () => {
         };
 
         try {
-            console.log('Sending request to API with data:', productData);
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/products`, productData);
-            console.log("Product created successfully:", response.data);
 
             // Reset form
             setProductName('');
@@ -169,12 +137,6 @@ const CreateNewProduct = () => {
             setImageUrl('');
             setError('');
         } catch (error) {
-            console.error("API error details:", {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status,
-                headers: error.response?.headers
-            });
             setError(error.response?.data?.message || 'Error creating product. Please try again.');
         } finally {
             setIsSubmitting(false);

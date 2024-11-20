@@ -30,7 +30,6 @@ const CardAllUsers = () => {
             }
             setError(null);
         } catch (error) {
-            console.error('Fetch error:', error);
             setError('Error loading users: ' + error.message);
         } finally {
             setIsLoading(false);

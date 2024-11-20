@@ -64,7 +64,6 @@ const EditProduct = ({ product }) => {
                         setUploadProgress(progress);
                     },
                     (error) => {
-                        console.error('Upload error details:', error);
                         setIsUploading(false);
                     },
                     async () => {
@@ -74,7 +73,6 @@ const EditProduct = ({ product }) => {
                     }
                 );
             } catch (error) {
-                console.error("Upload error details:", error);
                 setIsUploading(false);
             }
         }
@@ -89,10 +87,8 @@ const EditProduct = ({ product }) => {
 
         try {
             const response = await axios.put(`${process.env.REACT_APP_API_URL}/products/${productId}`, updatedProductData);
-            console.log("Product updated successfully:", response.data);
             navigate(`/admin/products`);
         } catch (error) {
-            console.log('API error details', error);
         }
     };
 

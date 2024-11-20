@@ -53,17 +53,11 @@ const CreateNewUsers = () => {
         if (!file) return;
 
         // Debug log - File details
-        console.log('Selected file:', {
-            name: file.name,
-            type: file.type,
-            size: `${(file.size / 1024 / 1024).toFixed(2)} MB`
-        });
 
         // Validate file type
         const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (!validTypes.includes(file.type)) {
             const errorMsg = 'Please upload only image files (JPEG, PNG, GIF)';
-            console.error('File type error:', errorMsg);
             setError(errorMsg);
             return;
         }
@@ -71,7 +65,6 @@ const CreateNewUsers = () => {
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             const errorMsg = 'File size must be less than 5MB';
-            console.error('File size error:', errorMsg);
             setError(errorMsg);
             return;
         }
@@ -81,7 +74,6 @@ const CreateNewUsers = () => {
 
         try {
             const fileName = `users/${Date.now()}-${file.name}`;
-            console.log('Attempting to upload file to path:', fileName);
 
             const storageRef = ref(storage, fileName);
             const uploadTask = uploadBytesResumable(storageRef, file);
@@ -91,23 +83,14 @@ const CreateNewUsers = () => {
                 (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     setUploadProgress(progress);
-                    console.log('Upload progress:', `${progress.toFixed(2)}%`);
                 },
                 (error) => {
-                    console.error("Upload error details:", {
-                        code: error.code,
-                        message: error.message,
-                        serverResponse: error.serverResponse
-                    });
                     setError('Failed to upload image. Please try again.');
                     setIsUploading(false);
                 },
                 async () => {
                     try {
                         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        console.log('Upload successful! Download URL:', downloadURL);
-                        console.log('Total bytes transferred:', uploadTask.snapshot.bytesTransferred);
-                        console.log('Final upload state:', uploadTask.snapshot.state);
 
                         setFormData(prev => ({
                             ...prev,
@@ -115,11 +98,6 @@ const CreateNewUsers = () => {
                         }));
                         setIsUploading(false);
                     } catch (error) {
-                        console.error("Error getting download URL:", {
-                            code: error.code,
-                            message: error.message,
-                            serverResponse: error.serverResponse
-                        });
                         setError('Failed to get image URL. Please try again.');
                         setIsUploading(false);
                     }
@@ -164,12 +142,7 @@ const CreateNewUsers = () => {
         };
 
         try {
-            console.log('Sending request to API with data:', {
-                ...userData,
-                password: '***hidden***'
-            });
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/users`, userData);
-            console.log("User created successfully:", response.data);
 
             // Reset form
             setFormData({
@@ -184,12 +157,6 @@ const CreateNewUsers = () => {
             navigate('/admin/users/')
 
         } catch (error) {
-            console.error("API error details:", {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status,
-                headers: error.response?.headers
-            });
             setError(error.response?.data?.message || 'Error creating user. Please try again.');
         } finally {
             setIsSubmitting(false);
