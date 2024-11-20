@@ -7,6 +7,7 @@ import Auth from "./layouts/Auth";
 import Profile from "./views/Profile";
 import Admin from "./layouts/Admin";
 import {ProtectedRoute} from "./components/auth/ProtectedRoute";
+import Success from "./pages/common-pages/Success";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/*" element = {<MainLayout/>}/>
                     <Route path="/auth/*" element={<Auth />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/success" element={<Success/>}/>
                     <Route
                         path="/admin/*"
                         element={
