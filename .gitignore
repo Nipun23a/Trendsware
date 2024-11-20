@@ -69,5 +69,4 @@ node_modules/
 .dataconnect
 
 
-client/src/firebase.js
 server/api/config/serviceAccount.json
